@@ -1,0 +1,218 @@
+---
+export const prerender = false;
+
+import Button from '@atoms/Button.astro';
+import Link from '@atoms/Link.astro';
+import List from '@atoms/List.astro';
+import { Icon } from 'astro-icon/components';
+
+let user = Astro.locals.user;
+---
+
+{user ? (
+  <div class="user-menu">
+    <Button
+      type="button"
+      className="user-menu-trigger"
+      backgroundColor="transparent"
+      textColor="text"
+      border={false}
+      padding="var(--space-1)"
+      ariaLabel="Menu utilisateur"
+      data-user-menu-trigger
+    >
+      <img 
+        src={user.image ?? "https://picsum.photos/id/237/100/100"} 
+        alt="Avatar de l'utilisateur" 
+        class="user-avatar"
+      />
+    </Button>
+
+    <List
+      className="user-menu-dropdown"
+      showMarkers={false}
+      padding="var(--space-1) 0"
+      data-user-menu-dropdown
+    >
+      <li>
+        <Link
+          href="/profil"
+          textColor="text"
+          backgroundColor="transparent"
+          padding="var(--space-2) var(--space-4)"
+          border={false}
+          className="user-menu-item"
+        >
+          <Icon name="mdi:account" size={18} />
+          <span>{user.name ?? "Profil"}</span>
+        </Link>
+      </li>
+      {"role" in user && user.role === "admin" && (
+        <li>
+          <Link
+            href="/admin"
+            textColor="text"
+            backgroundColor="transparent"
+            padding="var(--space-2) var(--space-4)"
+            border={false}
+            className="user-menu-item"
+          >
+            <Icon name="mdi:view-dashboard" size={18} />
+            <span>Dashboard</span>
+          </Link>
+        </li>
+      )}
+      <li>
+        <Button
+          type="button"
+          className="user-menu-item user-logout-btn"
+          backgroundColor="transparent"
+          textColor="text"
+          border={false}
+          padding="var(--space-2) var(--space-4)"
+          id="user-logout-btn"
+        >
+          <Icon name="mdi:logout" size={18} />
+          <span>Déconnexion</span>
+        </Button>
+      </li>
+    </List>
+  </div>
+) : (
+  <Link
+    href="/connexion"
+    textColor="text"
+    backgroundColor="transparent"
+    border={false}
+    padding="var(--space-1)"
+    ariaLabel="Se connecter"
+    className="user-login-link"
+  >
+    <Icon name="mdi:account-circle" size={36} />
+  </Link>
+)}
+
+<style>
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  width: var(--space-9);
+  height: var(--space-9);
+  border-radius: var(--radius-circle);
+  object-fit: cover;
+  border: var(--border-width-2) solid var(--color-border);
+  transition: border-color var(--transition-speed) ease;
+}
+
+.user-menu-trigger:hover .user-avatar,
+.user-menu-trigger:focus .user-avatar {
+  border-color: var(--color-primary);
+}
+
+/* Dropdown */
+.user-menu-dropdown {
+  position: absolute !important;
+  z-index: 9999;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 200px;
+  background: var(--color-surface);
+  border-radius: var(--radius-3);
+  border: var(--border-width-1) solid var(--color-border);
+  box-shadow: var(--elevation-e4);
+  display: none;
+  opacity: 0;
+  transform: translateY(calc(var(--space-2) * -1));
+  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+.user-menu[data-open] .user-menu-dropdown {
+  display: flex !important;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.user-menu-dropdown li {
+  width: 100%;
+}
+
+.user-menu-item {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-2);
+  transition: background-color var(--transition-speed) ease;
+}
+
+.user-menu-item:hover,
+.user-menu-item:focus {
+  background: var(--color-muted) !important;
+}
+
+.user-logout-btn {
+  color: var(--color-error);
+}
+
+.user-login-link {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity var(--transition-speed) ease;
+}
+
+.user-login-link:hover,
+.user-login-link:focus {
+  opacity: 1;
+}
+</style>
+
+<script>
+const userMenu = document.querySelector('[data-user-menu-trigger]')?.closest('.user-menu');
+const trigger = userMenu?.querySelector('[data-user-menu-trigger]');
+
+if (userMenu && trigger) {
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = userMenu.hasAttribute('data-open');
+    
+    if (isOpen) {
+      userMenu.removeAttribute('data-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    } else {
+      userMenu.setAttribute('data-open', '');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target as Node)) {
+      userMenu.removeAttribute('data-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && userMenu.hasAttribute('data-open')) {
+      userMenu.removeAttribute('data-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      (trigger as HTMLElement).focus();
+    }
+  });
+}
+
+// Logout handler
+const logoutBtn = document.getElementById('user-logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', async () => {
+    const mod = await import('@auth/auth-client');
+    await mod.authClient.signOut();
+    window.location.href = '/connexion';
+  });
+}
+</script>

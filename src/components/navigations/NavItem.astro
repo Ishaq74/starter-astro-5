@@ -1,0 +1,412 @@
+---
+import Text from "@atoms/Text.astro";
+import { Icon } from 'astro-icon/components';
+import Link from "@atoms/Link.astro";
+
+export interface Props {
+  name: string;
+  url?: string;
+  icon?: string;
+  dropdown?: boolean;
+  children?: {
+    name: string;
+    url: string;
+    icon?: string;
+    children?: {
+      name: string;
+      url: string;
+      icon?: string;
+    }[];
+  }[];
+  mode?: "desktop" | "mobile";
+}
+
+const {
+  name,
+  url = "#",
+  icon,
+  dropdown = false,
+  children = [],
+  mode = "desktop"
+} = Astro.props;
+---
+
+{mode === "desktop" ? (
+  <li class="nav-item" role="none">
+    {dropdown && children.length > 0 ? (
+      <div class="dropdown-wrapper" role="presentation">
+        <button class="dropdown-trigger" aria-haspopup="true" aria-expanded="false" type="button" data-dropdown-trigger>
+          {icon && <Icon name={icon} size={18} />}
+          <Text tag="span">{name}</Text>
+          <Icon name="mdi:chevron-down" size={16} class="dropdown-chevron" />
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-label={name} data-dropdown-menu>
+          {children.map(child => (
+            <li role="none">
+              {child.children && child.children.length > 0 ? (
+                <div class="dropdown-submenu">
+                  <button class="dropdown-submenu-trigger" aria-haspopup="true" aria-expanded="false" type="button">
+                    {child.icon && <Icon name={child.icon} size={16} />} {child.name}
+                    <Icon name="mdi:chevron-right" size={14} class="submenu-chevron" />
+                  </button>
+                  <ul class="dropdown-submenu-content" role="menu" aria-label={child.name}>
+                    {child.children.map(subchild => (
+                      <li role="none">
+                        <Link href={subchild.url} role="menuitem" tabindex="-1">
+                          {subchild.icon && <Icon name={subchild.icon} size={14} />} {subchild.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <Link href={child.url} role="menuitem" tabindex="-1">
+                  {child.icon && <Icon name={child.icon} size={16} />} {child.name}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <Link href={url} class="nav-link" role="menuitem">{icon && <Icon name={icon} size={18} />}{name}</Link>
+    )}
+  </li>
+) : (
+  <li role="none">
+    {dropdown && children.length > 0 ? (
+      <details class="mobile-dropdown">
+        <summary>
+          {icon && <Icon name={icon} size={18} />} {name}
+          <Icon name="mdi:chevron-down" size={16} class="mobile-chevron" />
+        </summary>
+        <ul class="mobile-submenu">
+          {children.map(child => (
+            <li>
+              {child.children && child.children.length > 0 ? (
+                <details class="mobile-dropdown-nested">
+                  <summary>
+                    {child.icon && <Icon name={child.icon} size={16} />} {child.name}
+                    <Icon name="mdi:chevron-down" size={14} class="mobile-chevron-nested" />
+                  </summary>
+                  <ul class="mobile-submenu-nested">
+                    {child.children.map(subchild => (
+                      <li>
+                        <Link href={subchild.url}>
+                          {subchild.icon && <Icon name={subchild.icon} size={14} />} {subchild.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <Link href={child.url}>
+                  {child.icon && <Icon name={child.icon} size={16} />} {child.name}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </details>
+    ) : (
+      <Link href={url}>
+        {icon && <Icon name={icon} size={18} />}
+        {name}
+      </Link>
+    )}
+  </li>
+)}
+
+<style is:inline>
+  .nav-item {
+    position: relative;
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+  }
+
+  .dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font: inherit;
+    padding: var(--space-2) var(--space-5);2) var(--space-5);
+    border-radius: var(--radius-1);
+    transition: background-color var(--transition-speed) ease;
+  }
+
+  .dropdown-trigger:hover,
+  .dropdown-trigger:focus {
+    background-color: var(--color-surface);
+  }
+
+  .dropdown-chevron {
+    transition: transform var(--transition-speed) ease;
+  }
+
+  .dropdown-wrapper[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: var(--border-width-1) solid var(--color-border);
+    box-shadow: var(--elevation-e3);
+    padding: var(--space-2) 0;
+    min-width: 12.5rem;
+    z-index: 100;
+    border-radius: var(--radius-2);
+  }
+
+  .dropdown-wrapper:hover .dropdown-menu,
+  .dropdown-wrapper:focus-within .dropdown-menu,
+  .dropdown-wrapper[data-open] .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-menu li {
+    position: relative;
+  }
+
+  .dropdown-menu li > a,
+  .dropdown-submenu-trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    text-decoration: none;
+    color: var(--color-text);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    transition: background-color var(--transition-speed) ease;
+  }
+
+  .dropdown-menu li > a:hover,
+  .dropdown-submenu-trigger:hover {
+    background-color: var(--color-surface);
+  }
+
+  /* Submenu styles */
+  .dropdown-submenu {
+    position: relative;
+  }
+
+  .dropdown-submenu-content {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: white;
+    border: var(--border-width-1) solid var(--color-border);
+    box-shadow: var(--elevation-e3);
+    padding: var(--space-2) 0;
+    min-width: 11.25rem;
+    z-index: 101;
+    border-radius: var(--radius-2);
+  }
+
+  .dropdown-submenu:hover .dropdown-submenu-content,
+  .dropdown-submenu:focus-within .dropdown-submenu-content {
+    display: block;
+  }
+
+  .submenu-chevron {
+    margin-left: auto;
+  }
+
+  /* Mobile styles */
+  .mobile-dropdown > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    padding: var(--space-3) var(--space-5);
+    border-bottom: var(--border-width-1) solid var(--color-border);
+  }
+
+  .mobile-dropdown > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--color-surface);
+  }
+
+  .mobile-submenu a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-6); var(--space-6);
+    text-decoration: none;
+    color: var(--color-text);
+    border-bottom: var(--border-width-1) solid var(--color-border);
+  }
+
+  .mobile-submenu a:hover {
+    background-color: var(--color-muted);
+  }
+
+  .mobile-dropdown-nested > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 500;
+    padding: var(--space-2) var(--space-6);
+    border-bottom: var(--border-width-1) solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .mobile-dropdown-nested > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-submenu-nested {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--color-surface);
+  }
+
+  .mobile-submenu-nested a {
+    padding: var(--space-2) var(--space-8);
+    background-color: var(--color-surface);
+  }
+
+  .mobile-chevron,
+  .mobile-chevron-nested {
+    margin-left: auto;
+    transition: transform var(--transition-speed) ease;
+  }
+
+  .mobile-dropdown[open] .mobile-chevron,
+  .mobile-dropdown-nested[open] .mobile-chevron-nested {
+    transform: rotate(180deg);
+  }
+
+  /* Accessibility improvements */
+  @media (prefers-reduced-motion: reduce) {
+    .dropdown-chevron,
+    .mobile-chevron,
+    .mobile-chevron-nested {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Enhanced dropdown functionality for desktop
+  function initDropdowns() {
+    const dropdownTriggers = document.querySelectorAll('[data-dropdown-trigger]');
+    
+    dropdownTriggers.forEach(trigger => {
+      const wrapper = trigger.closest('.dropdown-wrapper');
+      const menu = wrapper?.querySelector('[data-dropdown-menu]');
+      
+      if (!wrapper || !menu) return;
+
+      // Click handler for dropdown trigger
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const isOpen = wrapper.hasAttribute('data-open');
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.dropdown-wrapper[data-open]').forEach(w => {
+          if (w !== wrapper) {
+            w.removeAttribute('data-open');
+            const btn = w.querySelector('[data-dropdown-trigger]');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+          }
+        });
+        
+        if (isOpen) {
+          wrapper.removeAttribute('data-open');
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          wrapper.setAttribute('data-open', '');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Keyboard navigation
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          trigger.click();
+        } else if (e.key === 'Escape') {
+          wrapper.removeAttribute('data-open');
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.focus();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          wrapper.setAttribute('data-open', '');
+          trigger.setAttribute('aria-expanded', 'true');
+          const firstLink = menu.querySelector('a');
+          if (firstLink) firstLink.focus();
+        }
+      });
+
+      // Menu item keyboard navigation
+      const menuItems = menu.querySelectorAll('a, button');
+      menuItems.forEach((item, index) => {
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const nextItem = menuItems[index + 1];
+            if (nextItem) nextItem.focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prevItem = menuItems[index - 1];
+            if (prevItem) {
+              prevItem.focus();
+            } else {
+              trigger.focus();
+            }
+          } else if (e.key === 'Escape') {
+            wrapper.removeAttribute('data-open');
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.focus();
+          }
+        });
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown-wrapper')) {
+        document.querySelectorAll('.dropdown-wrapper[data-open]').forEach(wrapper => {
+          wrapper.removeAttribute('data-open');
+          const trigger = wrapper.querySelector('[data-dropdown-trigger]');
+          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  }
+
+  // Initialize when DOM is loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDropdowns);
+  } else {
+    initDropdowns();
+  }
+</script>

@@ -1,0 +1,246 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface IconProps {
+  name: string;
+  size?: number;
+  side?: 'left' | 'right';
+  className?: string;
+}
+
+interface Props {
+  id?: string;
+  name?: string;
+  type?: 
+    | 'text' | 'email' | 'password' | 'number' | 'color' | 'date' | 'url' | 'textarea' | 'radio' | 'checkbox' | 'select' | 'file' | 'search';
+  label?: string;
+  placeholder?: string;
+  value?: string | number | boolean;
+  required?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  minlength?: number;
+  maxlength?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+  pattern?: string;
+  rows?: number;      // textarea only
+  cols?: number;      // textarea only
+  options?: { value: string; label: string }[]; // select only
+  iconLeft?: IconProps;
+  iconRight?: IconProps;
+  className?: string;
+  style?: string;
+  [key: string]: any;
+}
+
+const {
+  id,
+  name,
+  type = 'text',
+  label,
+  placeholder = '',
+  value = '',
+  required = false,
+  disabled = false,
+  readonly = false,
+  minlength,
+  maxlength,
+  min,
+  max,
+  step,
+  pattern,
+  rows = 4,
+  cols = 40,
+  options = [],
+  iconLeft,
+  iconRight,
+  className = '',
+  style: inlineStyle = '',
+  variant,
+  ...htmlAttributes
+} = Astro.props as Props;
+
+// No .input class, variant only for native element
+const styleAttr = [inlineStyle].filter(Boolean).join(' ');
+---
+
+<div style={styleAttr}>
+  {label && <label for={id} class="input-label">{label}{required ? '*' : ''}</label>}
+
+  {type === 'textarea' ? (
+    <>
+      {iconLeft && (
+        <span class={`icon-left icon ${iconLeft.className || ''}`} aria-hidden="true" style={`font-size: var(--text-input-icon, ${iconLeft.size ?? '1rem'});`}>
+          <Icon name={iconLeft.name} />
+        </span>
+      )}
+      <textarea
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        readonly={readonly}
+        minlength={minlength}
+        maxlength={maxlength}
+        rows={rows}
+        cols={cols}
+        class={variant}
+        {...htmlAttributes}
+      >{value}</textarea>
+      {iconRight && (
+        <span class={`icon-right icon ${iconRight.className || ''}`} aria-hidden="true" style={`font-size: ${iconRight.size ?? 16}px;`}>
+          <Icon name={iconRight.name} />
+        </span>
+      )}
+    </>
+  ) : type === 'select' ? (
+    <>
+      {iconLeft && (
+        <span class={`icon-left icon ${iconLeft.className || ''}`} aria-hidden="true" style={`font-size: ${iconLeft.size ?? '1rem'};`}>
+          <Icon name={iconLeft.name} />
+        </span>
+      )}
+      <select
+        id={id}
+        name={name}
+        required={required}
+        disabled={disabled}
+        class={variant}
+        {...htmlAttributes}
+      >
+        {options.length === 0 && <option value="">-- Aucun choix --</option>}
+        {options.map(option => (
+          <option value={option.value} selected={value === option.value}>{option.label}</option>
+        ))}
+      </select>
+      {iconRight && (
+        <span class={`icon-right icon ${iconRight.className || ''}`} aria-hidden="true" style={`font-size: ${iconRight.size ?? '1rem'};`}>
+          <Icon name={iconRight.name} />
+        </span>
+      )}
+    </>
+  ) : type === 'radio' || type === 'checkbox' ? (
+    <input
+      id={id}
+      name={name}
+      type={type}
+      value={value as string}
+      required={required}
+      disabled={disabled}
+      readonly={readonly}
+      class={variant}
+      {...htmlAttributes}
+      checked={!!value}
+    />
+  ) : (
+    <>
+      {iconLeft && (
+        <span class={`icon-left icon ${iconLeft.className || ''}`} aria-hidden="true" style={`font-size: ${iconLeft.size ?? '1rem'};`}>
+          <Icon name={iconLeft.name} />
+        </span>
+      )}
+      <input
+        id={id}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        value={value as string | number}
+        required={required}
+        disabled={disabled}
+        readonly={readonly}
+        minlength={minlength}
+        maxlength={maxlength}
+        min={min}
+        max={max}
+        step={step}
+        pattern={pattern}
+        class={variant}
+        {...htmlAttributes}
+      />
+      {iconRight && (
+        <span class={`icon-right icon ${iconRight.className || ''}`} aria-hidden="true" style={`font-size: ${iconRight.size ?? '1rem'};`}>
+          <Icon name={iconRight.name} />
+        </span>
+      )}
+    </>
+  )}
+</div>
+
+<style is:inline>
+  .input-label {
+    margin-bottom: var(--space-2);
+    font-weight: 600;
+    user-select: none;
+    display: block;
+  }
+  input,
+  select,
+  textarea {
+    font-family: system-ui, sans-serif;
+    font-size: 1rem;
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-2) solid var(--color-border);
+    border-radius: var(--radius-2);
+    outline-offset: var(--border-width-2);
+    transition: outline-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    background: var(--color-background);
+    color: var(--color-text);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  input[class~="primary"], textarea[class~="primary"], select[class~="primary"] {
+    background: var(--color-primary-light);
+    color: var(--color-text-dark);
+    border-color: var(--color-primary);
+  }
+  input[class~="secondary"], textarea[class~="secondary"], select[class~="secondary"] {
+    background: var(--color-secondary-light);
+    color: var(--color-text);
+    border-color: var(--color-secondary);
+    border-style: dashed;
+  }
+  input[class~="accent"], textarea[class~="accent"], select[class~="accent"] {
+    background: var(--color-accent-light);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+  }
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: 3px solid var(--color-primary);
+  }
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    background: var(--color-muted);
+    color: var(--color-text);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--color-border);
+  }
+  .icon-left {
+    left: var(--space-3);
+  }
+  .icon-right {
+    right: var(--space-3);
+  }
+  input.icon-left,
+  textarea.icon-left,
+  select.icon-left {
+    padding-left: var(--space-10);
+  }
+  input.icon-right,
+  textarea.icon-right,
+  select.icon-right {
+    padding-right: var(--space-10);
+  }
+</style>

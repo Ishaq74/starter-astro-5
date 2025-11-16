@@ -1,0 +1,133 @@
+---
+import Button from '@atoms/Button.astro';
+import Link from '@atoms/Link.astro';
+import List from '@atoms/List.astro';
+import { Icon } from 'astro-icon/components';
+
+const locales = [
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
+];
+
+const current = Astro.url.pathname.split('/')[1] || 'fr';
+
+function getHref(locale: string) {
+  if (locale === 'fr') return '/';
+  return `/${locale}/`;
+}
+
+const currentLocale = locales.find((l) => l.code === current) || locales[0];
+---
+
+<div class="lang-switch">
+  <Button
+    type="button"
+    className="lang-switch-trigger"
+    backgroundColor="transparent"
+    textColor="text"
+    border={true}
+    borderColor="border"
+    padding="var(--space-2) var(--space-3)"
+    ariaLabel="Changer de langue"
+  >
+    <span class="lang-flag">{currentLocale.flag}</span>
+    <span>{currentLocale.label}</span>
+    <Icon name="mdi:chevron-down" size={16} class="lang-arrow" />
+  </Button>
+
+  <List
+    className="lang-switch-menu"
+    showMarkers={false}
+    padding="var(--space-2) 0"
+  >
+    {locales.map(({ code, label, flag }) => (
+      <li>
+        <Link
+          href={getHref(code)}
+          textColor="text"
+          backgroundColor="transparent"
+          padding="var(--space-2) var(--space-4)"
+          border={false}
+          className={current === code ? 'lang-switch-item lang-switch-item-active' : 'lang-switch-item'}
+        >
+          <span class="lang-flag">{flag}</span>
+          <span>{label}</span>
+        </Link>
+      </li>
+    ))}
+  </List>
+</div>
+
+<style>
+.lang-switch {
+  position: relative;
+  display: inline-block;
+}
+
+.lang-flag {
+  font-size: 1.2rem;
+  margin-right: var(--space-1);
+}
+
+.lang-arrow {
+  margin-left: var(--space-2);
+  opacity: 0.7;
+  transition: transform var(--transition-speed) ease;
+}
+
+.lang-switch:focus-within .lang-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu - pure CSS */
+.lang-switch-menu {
+  position: absolute !important;
+  z-index: 9999;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  min-width: 100%;
+  background: var(--color-surface);
+  border-radius: var(--radius-3);
+  border: var(--border-width-1) solid var(--color-border);
+  box-shadow: var(--elevation-e4);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(calc(var(--space-2) * -1));
+  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, visibility var(--transition-speed);
+}
+
+.lang-switch:focus-within .lang-switch-menu {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lang-switch-menu li {
+  width: 100%;
+}
+
+.lang-switch-item {
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  gap: var(--space-2);
+  border-radius: var(--radius-2);
+  transition: background-color var(--transition-speed) ease;
+}
+
+.lang-switch-item:hover,
+.lang-switch-item:focus {
+  background: var(--color-muted) !important;
+}
+
+.lang-switch-item-active {
+  background: var(--color-primary-light) !important;
+  color: var(--color-primary) !important;
+  font-weight: bold;
+}
+</style>

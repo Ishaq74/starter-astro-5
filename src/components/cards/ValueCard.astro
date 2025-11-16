@@ -1,0 +1,55 @@
+---
+// src/components/cards/ValueCard.astro
+import { Icon } from "astro-icon/components";
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+}
+const { icon, title, description } = Astro.props;
+---
+<div class="value-card">
+  <div class="icon-container">
+    <Icon name={icon} />
+  </div>
+  <h3 class="value-card-title">{title}</h3>
+  <p class="value-card-description">{description}</p>
+</div>
+<style>
+  .value-card {
+    background-color: var(--color-surface);
+    border: var(--border-width-1) solid var(--color-border);
+    border-radius: var(--radius-2);
+    padding: var(--space-10);
+    text-align: center;
+    transition: all var(--transition-speed) ease;
+  }
+  .value-card:hover {
+    transform: translateY(calc(-1 * var(--space-2)));
+    box-shadow: var(--elevation-e4);
+  }
+  .icon-container {
+    margin: 0 auto;
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+  .icon-container svg {
+    width: 3rem;
+    height: 3rem;
+  }
+  .value-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: var(--space-4);
+  }
+  .value-card-description {
+    color: var(--color-muted);
+    margin-top: var(--space-2);
+  }
+</style>

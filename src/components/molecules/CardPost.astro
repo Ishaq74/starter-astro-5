@@ -1,0 +1,53 @@
+---
+import Card from '@atoms/Card.astro';
+
+export interface PostProps {
+  title: string;
+  image: string;
+  excerpt: string;
+  date: string;
+  author: string;
+}
+
+const { title, image, excerpt, date, author } = Astro.props as PostProps;
+---
+<Card className="card-post">
+  <div class="card-post-content">
+    <h3 class="card-post-title">{title}</h3>
+    <img src={image} alt={title} class="card-post-image" />
+    <p class="card-post-excerpt">{excerpt}</p>
+    <div class="card-post-meta">
+      <span>{author}</span> • <span>{date}</span>
+    </div>
+  </div>
+</Card>
+
+<style is:inline>
+.card-post {
+  background: var(--color-surface);
+  border-left: var(--border-width-4) solid var(--color-accent-dark);
+}
+.card-post-content {
+  display: grid;
+  gap: var(--space-4);
+  text-align: left;
+}
+.card-post-title {
+  font-size: var(--text-card-post-title, 1.25rem);
+  font-weight: 600;
+}
+.card-post-image {
+  width: 100%;
+  height: var(--size-card-post-image-height, 12rem);
+  object-fit: cover;
+  border-radius: var(--radius-3);
+}
+.card-post-excerpt {
+  color: var(--color-muted);
+}
+.card-post-meta {
+  margin-top: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+</style>

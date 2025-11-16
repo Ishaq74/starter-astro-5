@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import Link from '@components/atoms/Link.astro';
+
+const siteIdentities = await getCollection('siteIdentity');
+const site = siteIdentities.find((s) => s.data.isDefault) ?? siteIdentities[0];
+const NAV_LINKS = (site?.data?.navLinks || []) as Array<{ url: string; name: string }>;
+---
+{NAV_LINKS.map((link) => (
+    <Link href={link.url} className="navbar-item">{link.name}</Link>
+))}
+
+<style>
+.navbar-item {
+  color: var(--color-text, black);
+  margin-right: var(--space-4);
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-speed) ease;
+}
+
+.navbar-item:hover {
+  color: var(--color-primary);
+}
+</style>

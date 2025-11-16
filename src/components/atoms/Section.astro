@@ -1,0 +1,208 @@
+---
+interface Props {
+  tag?: 'section' | 'div' | 'article' | 'aside' | 'nav' | 'header' | 'footer' | 'main';
+  preset?: 'default' | 'primary' | 'secondary' | 'accent';
+  variant?: 'default' | 'primary' | 'secondary' | 'accent';
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'baseline' | 'stretch';
+  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+  alignContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+  padding?: string;
+  paddingBlock?: string;
+  paddingInline?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingLeft?: string;
+  paddingRight?: string;
+  margin?: string;
+  marginBlock?: string;
+  marginInline?: string;
+  marginTop?: string;
+  marginBottom?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  border?: boolean;
+  borderColor?: string;
+  borderWidth?: string;
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset';
+  textColor?: string;
+  backgroundColor?: string;
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
+  width?: string;
+  minHeight?: string;
+  maxWidth?: string;
+  className?: string;
+  [key: string]: any;
+}
+
+const {
+  tag = 'section',
+  preset = 'default',
+  variant,
+  alignItems = 'stretch',
+  justifyContent = 'flex-start',
+  alignContent = 'stretch',
+  align,
+  xPadding,
+  yPadding,
+  padding,
+  paddingBlock,
+  paddingInline,
+  paddingTop,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  margin,
+  marginBlock,
+  marginInline,
+  marginTop,
+  marginBottom,
+  marginLeft,
+  marginRight,
+  border,
+  borderColor,
+  borderWidth = 'var(--border-width-1)',
+  borderStyle,
+  textColor,
+  backgroundColor,
+  textAlign = 'left',
+  width,
+  minHeight,
+  maxWidth,
+  className = '',
+  ...htmlAttributes
+} = Astro.props as Props;
+
+const validTags = ['section', 'div', 'article', 'aside', 'nav', 'header', 'footer', 'main'];
+const SectionTag = validTags.includes(tag) ? tag : 'section';
+
+// Liste complète des tokens design (adaptée à votre liste)
+const designTokens = [
+  'primary', 'secondary', 'accent', 'background', 'text', 'border', 'hover', 'focus',
+  'warning', 'info', 'disabled', 'muted', 'surface', 'shadow', 'shadow-dark',
+  'error', 'success',
+  'primary-light', 'secondary-light', 'accent-light',
+  'primary-dark', 'secondary-dark', 'accent-dark', 'background-dark', 'text-dark',
+  'border-dark', 'hover-dark', 'surface-dark', 'muted-dark'
+];
+
+// Fonction pour détecter si c’est un token design
+function isDesignToken(color: string) {
+  return designTokens.includes(color);
+}
+
+
+// Presets configuration
+const presets = {
+  default: {
+    padding: padding || 'var(--space-5)',
+    backgroundColor: backgroundColor || 'transparent',
+    textColor: textColor || 'var(--color-text)',
+    border: border ?? false,
+    borderColor: borderColor || 'var(--color-border)',
+    borderWidth: borderWidth || '1px',
+    borderStyle: borderStyle || 'solid'
+  },
+  primary: {
+    padding: padding || 'var(--space-10) var(--space-5)',
+    backgroundColor: backgroundColor || 'var(--color-primary)',
+    textColor: textColor || 'var(--color-text-dark)',
+    border: border ?? true,
+    borderColor: borderColor || 'var(--color-primary-dark)',
+    borderWidth: borderWidth || '2px',
+    borderStyle: borderStyle || 'solid'
+  },
+  secondary: {
+    padding: padding || 'var(--space-8) var(--space-5)',
+    backgroundColor: backgroundColor || 'var(--color-secondary)',
+    textColor: textColor || 'var(--color-text)',
+    border: border ?? true,
+    borderColor: borderColor || 'var(--color-secondary-dark)',
+    borderWidth: borderWidth || '1px',
+    borderStyle: borderStyle || 'dashed'
+  },
+  accent: {
+    padding: padding || 'var(--space-10) var(--space-5)',
+    backgroundColor: backgroundColor || 'var(--color-accent)',
+    textColor: textColor || 'var(--color-text-dark)',
+    border: border ?? false,
+    borderColor: borderColor || 'var(--color-accent-dark)',
+    borderWidth: borderWidth || '1px',
+    borderStyle: borderStyle || 'solid'
+  }
+};
+
+// Backwards-compatible: prefer `variant` prop, fall back to legacy `preset`
+const usedVariant = variant ?? preset;
+const currentPreset = presets[usedVariant] || presets.default;
+
+// Gestion couleur textColor (idem, peut être token ou couleur directe)
+const resolvedTextColor = textColor || currentPreset.textColor;
+const cssTextColor = isDesignToken(resolvedTextColor) ? `var(--color-${resolvedTextColor})` : resolvedTextColor;
+
+// Gestion backgroundColor, appliquer variable CSS si token sinon couleur directe
+const resolvedBackgroundColor = backgroundColor || currentPreset.backgroundColor;
+const cssBackgroundColor = isDesignToken(resolvedBackgroundColor) ? `var(--color-${resolvedBackgroundColor})` : resolvedBackgroundColor;
+
+
+
+const providedClasses = (Astro.props as any).className || (Astro.props as any).customClasses || '';
+const classes = [usedVariant ? usedVariant : '', providedClasses].filter(Boolean).join(' ');
+
+const style = [
+  // horizontal / vertical shorthand
+  xPadding ? `padding-inline: ${xPadding};` : '',
+  yPadding ? `padding-block: ${yPadding};` : '',
+  `padding: ${paddingTop || currentPreset.padding};`,
+  paddingBlock ? `padding-block: ${paddingBlock};` : '',
+  paddingInline ? `padding-inline: ${paddingInline};` : '',
+  paddingBottom ? `padding-bottom: ${paddingBottom};` : '',
+  paddingLeft ? `padding-left: ${paddingLeft};` : '',
+  paddingRight ? `padding-right: ${paddingRight};` : '',
+  margin ? `margin: ${margin};` : '',
+  marginBlock ? `margin-block: ${marginBlock};` : '',
+  marginInline ? `margin-inline: ${marginInline};` : '',
+  marginTop ? `margin-top: ${marginTop};` : '',
+  marginBottom ? `margin-bottom: ${marginBottom};` : '',
+  marginLeft ? `margin-left: ${marginLeft};` : '',
+  marginRight ? `margin-right: ${marginRight};` : '',
+  `background-color: ${cssBackgroundColor};`,
+  `color: ${cssTextColor};`,
+  currentPreset.border ? `border: ${currentPreset.borderStyle} ${currentPreset.borderWidth} ${currentPreset.borderColor};` : '',
+  width ? `width: ${width};` : '',
+  minHeight ? `min-height: ${minHeight};` : '',
+  maxWidth ? `max-width: ${maxWidth};` : '',
+  `text-align: ${textAlign};`,
+  align ? `display: grid; align-items: ${align === 'center' ? 'center' : 'start'}; justify-items: ${align === 'center' ? 'center' : 'start'};` : '',
+].filter(Boolean).join(' ');
+---
+
+<SectionTag class={classes} style={style} {...htmlAttributes}>
+  <slot />
+</SectionTag>
+
+<style is:inline>
+  section, div, article, aside, nav, header, footer, main {
+    display: block;
+    background: var(--color-background);
+    color: var(--color-text);
+    padding: var(--space-5);
+    margin: 0;
+    border: none;
+    transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+  }
+  section[class~="primary"], div[class~="primary"], article[class~="primary"], aside[class~="primary"], nav[class~="primary"], header[class~="primary"], footer[class~="primary"], main[class~="primary"] {
+    background: var(--color-primary-light);
+    color: var(--color-text-dark);
+    border-color: var(--color-primary);
+  }
+  section[class~="secondary"], div[class~="secondary"], article[class~="secondary"], aside[class~="secondary"], nav[class~="secondary"], header[class~="secondary"], footer[class~="secondary"], main[class~="secondary"] {
+    background: var(--color-secondary-light);
+    color: var(--color-text);
+    border-color: var(--color-secondary);
+  }
+  section[class~="accent"], div[class~="accent"], article[class~="accent"], aside[class~="accent"], nav[class~="accent"], header[class~="accent"], footer[class~="accent"], main[class~="accent"] {
+    background: var(--color-accent-light);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+  }
+</style>

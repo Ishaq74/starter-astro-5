@@ -6,9 +6,38 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "checkdb": "tsx scripts/checkdb.ts",
+    "comparedb": "tsx scripts/comparedb.ts",
+    "syncdb:dev-to-prod": "tsx scripts/syncdb.ts dev-to-prod",
+    "syncdb:prod-to-dev": "tsx scripts/syncdb.ts prod-to-dev",
+    "migrate": "tsx scripts/migrate.ts",
+    "seed": "tsx scripts/seed.ts",
+    "contrast": "node scripts/contrast-check.js",
+    "test": "vitest run",
+    "test:ci": "tsc --noEmit && vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "astro check"
   },
   "dependencies": {
-    "astro": "^5.15.7"
+    "@astrojs/check": "^0.9.5",
+    "@iconify-json/circle-flags": "^1.2.10",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/openmoji": "^1.2.17",
+    "astro": "^5.15.7",
+    "astro-font": "^1.1.0",
+    "astro-icon": "^1.1.5",
+    "better-auth": "^1.3.34",
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.7",
+    "drizzle-orm": "^0.44.7",
+    "nodemailer": "^7.0.10",
+    "pg": "^8.16.3",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.3",
+    "@types/pg": "^8.15.6",
+    "tsx": "^4.20.6"
   }
 }

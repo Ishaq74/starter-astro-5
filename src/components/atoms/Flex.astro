@@ -1,0 +1,95 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type FlexTag = 'div' | 'section' | 'span' | 'nav';
+
+interface FlexProps extends HTMLAttributes<FlexTag> {
+  tag?: FlexTag;
+  xAlign?: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
+  yAlign?: 'start' | 'center' | 'end' | 'stretch';
+  direction?: 'row' | 'column';
+  wrap?: 'wrap' | 'nowrap';
+  yPadding?: string;
+  xPadding?: string;
+  marginY?: string;
+  marginX?: string;
+  gap?: string;
+  customClasses?: string;
+  backgroundColor?: string;
+  wFull?: boolean;
+  hFull?: boolean;
+}
+
+const {
+  tag = 'div',
+  xAlign = 'start',
+  yAlign = 'center',
+  direction = 'row',
+  wrap = 'nowrap',
+  yPadding = '0',
+  xPadding = '0',
+  marginY = '0',
+  marginX = '0',
+  gap = '0',
+  customClasses = '',
+  backgroundColor = 'transparent',
+  wFull = true,
+  hFull = false,
+  ...htmlAttributes
+} = Astro.props as FlexProps;
+
+const justifyContent = (() => {
+  switch (xAlign) {
+    case 'start': return 'flex-start';
+    case 'center': return 'center';
+    case 'end': return 'flex-end';
+    case 'space-between': return 'space-between';
+    case 'space-around': return 'space-around';
+    case 'space-evenly': return 'space-evenly';
+    default: return 'flex-start';
+  }
+})();
+
+const alignItems = (() => {
+  switch (yAlign) {
+    case 'start': return 'flex-start';
+    case 'center': return 'center';
+    case 'end': return 'flex-end';
+    case 'stretch': return 'stretch';
+    default: return 'center';
+  }
+})();
+
+const styles = {
+  display: 'flex',
+  flexDirection: direction,
+  flexWrap: wrap,
+  justifyContent,
+  alignItems,
+  gap,
+  paddingTop: yPadding,
+  paddingBottom: yPadding,
+  paddingLeft: xPadding,
+  paddingRight: xPadding,
+  marginTop: marginY,
+  marginBottom: marginY,
+  marginLeft: marginX,
+  marginRight: marginX,
+  backgroundColor,
+  width: wFull ? '100%' : 'auto',
+  height: hFull ? '100%' : 'auto',
+};
+
+const styleString = Object.entries(styles)
+  .map(([key, value]) => {
+    const cssKey = key.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`);
+    return `${cssKey}: ${value}`;
+  })
+  .join('; ');
+
+const Tag = tag;
+---
+
+<Tag class={customClasses} style={styleString} {...htmlAttributes}>
+  <slot />
+</Tag>

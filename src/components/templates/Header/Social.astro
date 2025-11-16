@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import Wrapper from '@atoms/Wrapper.astro';
+
+const siteIdentities = await getCollection('siteIdentity');
+const site = siteIdentities.find((s) => s.data.isDefault) ?? siteIdentities[0];
+const SOCIAL_MEDIA = (site?.data?.socialLinks || []) as Array<{ url: string; name: string; iconClass: string }>;
+---
+<Wrapper display="flex" gap="0.5rem" justifyContent="center" alignItems="center" width="auto" className="social-links">
+  {SOCIAL_MEDIA.map((social) => (
+    <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-icon-link">
+      <Icon name={social.iconClass} title={social.name} size={26} class="social-icon" />
+    </a>
+  ))}
+</Wrapper>
+
+<style>
+.social-links {
+  margin-left: auto;
+}
+
+.social-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-speed) ease;
+}
+
+.social-icon-link:hover {
+  transform: scale(1.1);
+}
+
+.social-icon {
+  color: white;
+  padding: var(--space-1);
+  background-color: var(--color-text, black);
+  border-radius: var(--radius-pill);
+  transition: background-color var(--transition-speed) ease;
+}
+
+.social-icon:hover {
+  background-color: var(--color-primary);
+}
+</style>

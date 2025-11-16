@@ -1,0 +1,241 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@atoms/Button.astro';
+import Card from '@atoms/Card.astro';
+import Input from '@atoms/Input.astro';
+import Link from '@atoms/Link.astro';
+import List from '@atoms/List.astro';
+import Table from '@atoms/Table.astro';
+import Text from '@atoms/Text.astro';
+import Wrapper from '@atoms/Wrapper.astro';
+import Section from '@atoms/Section.astro';
+import Sidebar from '@atoms/Sidebar.astro';
+import Details from '@atoms/Details.astro';
+---
+<BaseLayout>
+  <div class="docs-grid">
+    <aside class="docs-aside" aria-label="Table des matières">
+      <Sidebar />
+    </aside>
+
+    <!-- Anchor to show all sections via CSS-only navigation -->
+    <a id="all" class="sr-only" aria-hidden="true"></a>
+    <main class="docs-main">
+      <div class="doc-section" id="button">
+        <Details summary="Button – Bouton natif AAA" open>
+          <Text tag="p">Bouton natif accessible, toutes variantes AAA. Props: <code>variant</code>, <code>type</code>, <code>disabled</code>, <code>icon</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Button>Bouton</Button>
+            <Button disabled>Bouton Disabled</Button>
+            <Button autoFocus>Bouton Focus</Button>
+            <Button aria-pressed="true">Bouton Active</Button>
+            <Button class="showcase-hover">Bouton Hover</Button>
+            <Button variant="primary">Bouton Primary</Button>
+            <Button variant="secondary">Bouton Secondary</Button>
+            <Button variant="accent">Bouton Accent</Button>
+          </Wrapper>
+          <pre class="code-block">&lt;Button variant="primary"&gt;Bouton Primary&lt;/Button&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="input">
+        <Details summary="Input – Champ natif AAA" open>
+          <Text tag="p">Champ natif ultra flexible: input, textarea, select, radio, checkbox. Props: <code>type</code>, <code>variant</code>, <code>label</code>, <code>iconLeft</code>, <code>iconRight</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Input label="Texte" placeholder="Votre texte" />
+            <Input label="Email" type="email" variant="primary" placeholder="Votre email" />
+            <Input label="Mot de passe" type="password" variant="secondary" />
+            <Input label="Sélection" type="select" options={[{value:'a',label:'A'},{value:'b',label:'B'}]} variant="accent" />
+            <Input label="Zone de texte" type="textarea" variant="primary" />
+            <Input label="Case à cocher" type="checkbox" variant="secondary" />
+            <Input label="Radio" type="radio" variant="accent" />
+          </Wrapper>
+          <pre class="code-block">&lt;Input label="Email" type="email" variant="primary" placeholder="Votre email" /&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="card">
+        <Details summary="Card – Carte AAA" open>
+          <Text tag="p">Carte AAA, structure flexible, variantes. Props: <code>variant</code>, <code>className</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Card>Card</Card>
+            <Card variant="primary">Card Primary</Card>
+            <Card variant="secondary">Card Secondary</Card>
+            <Card variant="accent">Card Accent</Card>
+          </Wrapper>
+          <pre class="code-block">&lt;Card variant="primary"&gt;Card Primary&lt;/Card&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="link">
+        <Details summary="Link – Lien natif AAA" open>
+          <Text tag="p">Lien natif, toutes variantes AAA. Props: <code>variant</code>, <code>href</code>, <code>icon</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Link href="#">Lien</Link>
+            <Link href="#" variant="primary">Lien Primary</Link>
+            <Link href="#" variant="secondary">Lien Secondary</Link>
+            <Link href="#" variant="accent">Lien Accent</Link>
+          </Wrapper>
+          <pre class="code-block">&lt;Link href="#" variant="primary"&gt;Lien Primary&lt;/Link&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="list">
+        <Details summary="List – Liste AAA" open>
+          <Text tag="p">Liste ordonnée ou non, icônes, variantes. Props: <code>items</code>, <code>ordered</code>, <code>variant</code>, <code>icon</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <List items={["Item 1", "Item 2"]} />
+            <List items={["Item 1", "Item 2"]} variant="primary" />
+            <List items={["Item 1", "Item 2"]} variant="secondary" />
+            <List items={["Item 1", "Item 2"]} variant="accent" />
+          </Wrapper>
+          <pre class="code-block">&lt;List items={["Item 1", "Item 2"]} variant="primary" /&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="text">
+        <Details summary="Text – Texte AAA" open>
+          <Text tag="p">Texte natif, balises personnalisables (<code>p</code>, <code>span</code>, <code>h1</code>, etc.), variantes. Props: <code>tag</code>, <code>variant</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Text>Texte</Text>
+            <Text variant="primary">Texte Primary</Text>
+            <Text variant="secondary">Texte Secondary</Text>
+            <Text variant="accent">Texte Accent</Text>
+            <Text tag="h2" variant="primary">Titre H2 Primary</Text>
+          </Wrapper>
+          <pre class="code-block">&lt;Text tag="h2" variant="primary"&gt;Titre H2 Primary&lt;/Text&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="table">
+        <Details summary="Table – Tableau AAA" open>
+          <Text tag="p">Tableau natif, variantes AAA. Props: <code>columns</code>, <code>data</code>, <code>variant</code>, etc.</Text>
+          <Wrapper type="flex" style="gap:1rem;flex-wrap:wrap;">
+            <Table columns={[{ key: "cell1", label: "Cell 1" }, { key: "cell2", label: "Cell 2" }]} data={[{ cell1: "Cell 1", cell2: "Cell 2" }]} />
+            <Table columns={[{ key: "cell1", label: "Cell 1" }, { key: "cell2", label: "Cell 2" }]} data={[{ cell1: "Cell 1", cell2: "Cell 2" }]} variant="primary" />
+            <Table columns={[{ key: "cell1", label: "Cell 1" }, { key: "cell2", label: "Cell 2" }]} data={[{ cell1: "Cell 1", cell2: "Cell 2" }]} variant="secondary" />
+            <Table columns={[{ key: "cell1", label: "Cell 1" }, { key: "cell2", label: "Cell 2" }]} data={[{ cell1: "Cell 1", cell2: "Cell 2" }]} variant="accent" />
+          </Wrapper>
+          <pre class="code-block">&lt;Table columns={[{ key: "cell1", label: "Cell 1" }, { key: "cell2", label: "Cell 2" }]} data={[{ cell1: "Cell 1", cell2: "Cell 2" }]} variant="primary" /&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="wrapper">
+        <Details summary="Wrapper – Wrapper AAA" open>
+          <Text tag="p">Wrapper natif, structure flexible, variantes. Props: <code>variant</code>, <code>type</code>, etc.</Text>
+          <Wrapper display="flex" gap="var(--space-4)">
+            <Wrapper>Wrapper</Wrapper>
+            <Wrapper variant="primary">Wrapper Primary</Wrapper>
+            <Wrapper variant="secondary">Wrapper Secondary</Wrapper>
+            <Wrapper variant="accent">Wrapper Accent</Wrapper>
+          </Wrapper>
+          <pre class="code-block">&lt;Wrapper variant="primary"&gt;Wrapper Primary&lt;/Wrapper&gt;</pre>
+        </Details>
+      </div>
+
+      <div class="doc-section" id="section">
+        <Details summary="Section – Section AAA" open>
+          <Text tag="p">Section natif, structure flexible, variantes. Props: <code>variant</code>, <code>tag</code>, etc.</Text>
+          <Wrapper display="flex" gap="var(--space-4)">
+            <Section>Section</Section>
+            <Section variant="primary">Section Primary</Section>
+            <Section variant="secondary">Section Secondary</Section>
+            <Section variant="accent">Section Accent</Section>
+          </Wrapper>
+          <pre class="code-block">&lt;Section variant="primary"&gt;Section Primary&lt;/Section&gt;</pre>
+        </Details>
+      </div>
+    </main>
+
+    <aside class="docs-identity" aria-label="Fiche identité principale">
+      <div class="identity-card">
+        <div class="identity-avatar-placeholder" aria-hidden="true">BS</div>
+        <div class="identity-content">
+          <div class="identity-name">Boox Starter</div>
+          <div class="identity-role">Design System</div>
+          <div class="identity-bio">Design tokens, atoms & patterns — AAA-ready. Utilise les composants natifs, variantes via prop <code>variant</code>.</div>
+          <div class="identity-links">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+.skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.skip-link:focus { left: 1rem; top: 1rem; width: auto; height: auto; background: var(--color-bg); padding: .5rem .75rem; border-radius: var(--radius-1); }
+
+html { scroll-behavior: smooth; }
+.code-block { padding: 1rem; background: var(--color-code-bg); border-radius: var(--radius-2); overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace; font-size: .9rem; }
+
+Details[open] { margin-bottom: var(--space-6); }
+
+/* Details / summary polish */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: .75rem 1rem;
+  border-radius: var(--radius-1);
+  background: var(--color-surface-2);
+  display: block;
+  font-weight: 600;
+}
+details > summary::-webkit-details-marker { display: none; }
+details[open] > summary { background: linear-gradient(90deg, rgba(0,0,0,0.02), transparent); }
+details > summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Constrain main content for readability */
+.docs-main { max-width: 70ch; margin: 0; }
+.docs-main .doc-section { padding: var(--space-6) 0; }
+
+/* Accessible focus styles */
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.menu-link:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 20%, transparent); }
+
+:root { --aside-width: 16rem; --identity-width: 20rem; }
+.docs-grid { display: grid; grid-template-columns: var(--aside-width) 1fr var(--identity-width); gap: var(--space-8); align-items: start; }
+
+.docs-aside { position: sticky; top: 1.25rem; align-self: start; height: calc(100vh - 2.5rem); overflow: auto; }
+.docs-aside .sidebar { padding: var(--space-4); }
+
+.docs-main { min-width: 0; }
+.doc-section { display: none; }
+
+/* Fallback for browsers WITHOUT :has() support: show first section by default */
+.doc-section:first-of-type { display: block; }
+
+/* When a specific section is targeted, show only that section (modern browsers) */
+.docs-main:has(.doc-section:target) .doc-section { display: none; }
+.doc-section:target { display: block; }
+
+/* When no fragment target exists, show the first section by default (modern approach) */
+.docs-main:not(:has(.doc-section:target)) .doc-section:first-of-type { display: block; }
+
+/* When the special #all anchor is targeted, show all sections */
+#all:target ~ .docs-main .doc-section { display: block; }
+
+/* Simple screen-reader-only utility for the #all anchor */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+a.menu-link { display: inline-block; padding: .25rem .5rem; border-radius: .25rem; color: inherit; text-decoration: none; }
+
+@media (max-width: 900px) {
+  .docs-grid { grid-template-columns: 1fr; }
+  .docs-aside { order: 0; }
+  .docs-identity { order: 2; }
+}
+
+.identity-card { background: var(--color-surface); padding: var(--space-4); border-radius: var(--radius-2); display:flex; gap: var(--space-3); align-items:flex-start; }
+.identity-avatar-placeholder { width:56px; height:56px; border-radius:var(--radius-pill); background:var(--color-primary); color:var(--color-on-primary); display:flex; align-items:center; justify-content:center; font-weight:700; }
+.identity-name { font-weight:700; }
+.identity-role { font-size:.85rem; color:var(--color-muted); }
+.identity-bio { margin-top:.5rem; color:var(--color-text); }
+.identity-links { margin-top:.75rem; display:flex; gap:.5rem; }
+.identity-links a { text-decoration:none; color:var(--color-link); }
+</style>

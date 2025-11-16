@@ -1,0 +1,98 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface TimelineEvent {
+  year: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+interface Props {
+  events: TimelineEvent[];
+  preset?: 'primary' | 'secondary' | 'accent';
+}
+
+const { events, preset = 'primary' } = Astro.props;
+---
+
+<div class="timeline-container">
+  {events.map((event, index) => (
+    <div class:list={["timeline-item", { "is-last": index === events.length - 1 }]}>
+      <div class:list={["timeline-icon", `icon-preset-${preset}`]}>
+        <Icon name={event.icon} />
+      </div>
+      <div class="timeline-content">
+        <span class:list={["timeline-year", `year-preset-${preset}`]}>{event.year}</span>
+        <h3 class="timeline-title">{event.title}</h3>
+        <p class="timeline-description">{event.description}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style define:vars={{ presetColor: `var(--color-${preset})` }}>
+  .timeline-container {
+    position: relative;
+    max-width: var(--size-timeline-max-width, 54rem);
+    margin: 0 auto;
+  }
+  .timeline-container::after {
+    content: '';
+    position: absolute;
+    width: var(--border-width-3);
+    background-color: var(--color-secondary-light);
+    top: 0;
+    bottom: 0;
+    left: var(--space-7);
+    margin-left: calc(var(--border-width-3) / -2);
+  }
+  .timeline-item {
+    padding: var(--space-5) 0 var(--space-10) calc(var(--space-5) * 3.5);
+    position: relative;
+  }
+  .timeline-item.is-last {
+    padding-bottom: 0;
+  }
+  .timeline-icon {
+    position: absolute;
+    left: 0;
+    top: var(--space-1);
+    background-color: var(--color-surface);
+    width: var(--space-9);
+    height: var(--space-9);
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .timeline-icon svg {
+    width: var(--space-6);
+    height: var(--space-6);
+  }
+  .icon-preset-primary { border: var(--border-width-3) solid var(--color-primary); color: var(--color-primary); }
+  .icon-preset-secondary { border: var(--border-width-3) solid var(--color-secondary); color: var(--color-secondary); }
+  .icon-preset-accent { border: var(--border-width-3) solid var(--color-accent); color: var(--color-accent); }
+
+  .timeline-title {
+    font-weight: 700;
+    font-size: var(--text-timeline-title, 1.125rem);
+    margin-top: var(--space-1);
+  }
+  .timeline-description {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    margin-top: var(--space-1);
+  }
+
+  .timeline-year {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: var(--radius-pill);
+  }
+  .year-preset-primary { background-color: var(--color-primary-light); color: var(--color-primary-dark); }
+  .year-preset-secondary { background-color: var(--color-secondary-light); color: var(--color-secondary-dark); }
+  .year-preset-accent { background-color: var(--color-accent-light); color: var(--color-accent-dark); }
+</style>

@@ -1,0 +1,37 @@
+---
+import Card from '@atoms/Card.astro';
+import { Icon } from 'astro-icon/components';
+
+export interface IconCardProps {
+  title: string;
+  iconName: string; // Nom de l'icône (ex : 'icon-park:aviation')
+  description?: string;
+  iconSize?: number;
+}
+
+const { title, iconName, description, iconSize = 40 } = Astro.props as IconCardProps;
+---
+
+<Card className="card-icon">
+    <Icon name={iconName} size={iconSize} class="card-icon-icon" />
+      <h3 class="card-icon-title">{title}</h3>
+      {description && <p class="card-icon-description">{description}</p>}
+</Card>
+
+<style is:inline>
+.card-icon {
+  background-color: var(--color-surface);
+  border: var(--border-width-1) solid var(--color-border);
+}
+.card-icon-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+.card-icon-title {
+  font-size: var(--text-card-icon-title, 1.25rem);
+  font-weight: 600;
+}
+.card-icon-description {
+  color: var(--color-muted);
+}
+</style>

@@ -1,0 +1,28 @@
+---
+import Card from '@atoms/Card.astro';
+
+export interface CategoryProps {
+  title: string;
+}
+
+const { title } = Astro.props as CategoryProps;
+---
+<Card className="card-category">
+  <div class="card-category-content">
+    <h3 class="card-category-title">{title}</h3>
+  </div>
+</Card>
+
+<style is:inline>
+.card-category {
+  background-color: var(--color-secondary-light);
+  text-align: center;
+}
+.card-category-content {
+  padding: var(--space-4);
+}
+.card-category-title {
+  font-size: var(--text-card-category-title, 1.125rem);
+  font-weight: 600;
+}
+</style>

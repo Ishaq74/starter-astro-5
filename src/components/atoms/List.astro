@@ -1,0 +1,128 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  items?: string[] | { icon?: string; text: string }[];
+  ordered?: boolean;
+  icon?: string; // icône globale si item = string ou pas d'icône locale
+  showMarkers?: boolean; // affiche puces ou numéros si true
+  spacing?: string;
+  padding?: string;
+  margin?: string;
+  textAlign?: 'left' | 'center' | 'right';
+  shape?: 'sharp' | 'rounded' | 'circle';
+  shadow?: boolean;
+  border?: boolean;
+  borderColor?: string;
+  borderWidth?: string;
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double';
+  textColor?: string;
+  backgroundColor?: string;
+  className?: string;
+  style?: string;
+  [key: string]: any;
+}
+
+const {
+  items = [],
+  ordered = false,
+  icon,
+  showMarkers = true,
+  spacing = 'var(--space-2)',
+  padding = 'var(--space-5)',
+  margin,
+  textAlign = 'left',
+  shape = 'sharp',
+  shadow = false,
+  border = false,
+  borderColor = 'border',
+  borderWidth = 'var(--border-width-1)',
+  borderStyle = 'solid',
+  textColor = 'text',
+  backgroundColor,
+  className = '',
+  style: inlineStyle = '',
+  variant,
+  ...htmlAttributes
+} = Astro.props as Props;
+
+const designTokens = [
+  'primary', 'secondary', 'accent', 'background', 'text', 'border', 'hover', 'focus',
+  'warning', 'info', 'disabled', 'muted', 'surface', 'shadow', 'shadow-dark',
+  'error', 'success',
+  'primary-light', 'secondary-light', 'accent-light',
+  'primary-dark', 'secondary-dark', 'accent-dark', 'background-dark', 'text-dark',
+  'border-dark', 'hover-dark', 'surface-dark', 'muted-dark'
+];
+
+function token(val: string | undefined) {
+  return val && designTokens.includes(val) ? `var(--color-${val})` : val;
+}
+
+const cssTextColor = token(textColor);
+const cssBackgroundColor = token(backgroundColor);
+const cssBorderColor = token(borderColor);
+const Tag = ordered ? 'ol' : 'ul';
+
+const wrapperClass = variant ? variant : '';
+
+const wrapperStyle = [
+  cssTextColor ? `color: ${cssTextColor};` : '',
+  cssBackgroundColor ? `background-color: ${cssBackgroundColor};` : '',
+  border ? `border: ${borderWidth} ${borderStyle} ${cssBorderColor};` : '',
+  padding ? `padding: ${padding};` : '',
+  margin ? `margin: ${margin};` : '',
+  inlineStyle
+].filter(Boolean).join('');
+---
+
+<Tag class={wrapperClass} style={wrapperStyle} {...htmlAttributes}>
+  {items.map((item) => {
+    const content = typeof item === 'string' ? item : item.text;
+    const itemIcon = typeof item === 'string' ? icon : item.icon ?? icon;
+    return (
+      <li class="list-item" style={`gap: ${spacing};`}>
+        {itemIcon && <Icon name={itemIcon} />}
+        <span>{content}</span>
+      </li>
+    );
+  })}
+  <slot />
+</Tag>
+
+<style is:inline>
+  ul, ol {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: all var(--transition-speed) ease;
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+  ul[class~="primary"], ol[class~="primary"] {
+    background: var(--color-primary-light);
+    color: var(--color-text-dark);
+  }
+  ul[class~="secondary"], ol[class~="secondary"] {
+    background: var(--color-secondary-light);
+    color: var(--color-text);
+  }
+  ul[class~="accent"], ol[class~="accent"] {
+    background: var(--color-accent-light);
+    color: var(--color-text);
+  }
+  li {
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+    gap: var(--space-2);
+  }
+  li svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+</style>

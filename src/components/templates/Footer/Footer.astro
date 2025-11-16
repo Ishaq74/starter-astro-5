@@ -1,0 +1,201 @@
+---
+import { Icon } from 'astro-icon/components';
+import Section from '@components/atoms/Section.astro';
+import Wrapper from '@components/atoms/Wrapper.astro';
+import List from '@components/atoms/List.astro';
+import Link from '@components/atoms/Link.astro';
+import Text from '@components/atoms/Text.astro';
+import { getCollection } from 'astro:content';
+
+const siteIdentities = await getCollection('siteIdentity');
+const site = siteIdentities.find((s) => s.data.isDefault) ?? siteIdentities[0];
+const SOCIAL_MEDIA = (site?.data.socialLinks ?? []) as Array<{ url: string; name: string; iconClass: string }>;
+const NAV_LINKS = (site?.data.navLinks ?? []) as Array<{ name: string; url: string }>;
+const NAV_LINKS_SECONDARY = (site?.data.navSecondaryLinks ?? []) as Array<{ name: string; url: string }>;
+const FOOTER_TEXT = site?.data.footerText ?? '';
+const SITE_DEV_URL = site?.data.devUrl ?? '#';
+
+const config = {
+  showResources: true,
+  navPrimary: true,
+  navSecondary: true,
+  showSocialMedia: true,
+  showCopyright: true,
+};
+
+// Prepare footer columns: we'll render four columns.
+// Column 1: social icons
+// Column 2: primary nav (`NAV_LINKS`)
+// Column 3 & 4: split `NAV_LINKS_SECONDARY` into two halves when present (avoids duplication)
+const secondaryLinks = NAV_LINKS_SECONDARY || [];
+const half = Math.ceil(secondaryLinks.length / 2) || 0;
+const secondaryLeft = secondaryLinks.slice(0, half);
+const secondaryRight = secondaryLinks.slice(half);
+---
+<Section
+  tag="footer"
+  className="footer-main"
+  border={true}
+  borderWidth="var(--border-width-3)"
+  borderStyle="double"
+  borderColor="white"
+  backgroundColor="var(--color-text, black)"
+  paddingBlock="1rem"
+>
+  <Wrapper
+    tag="div"
+    display="grid"
+    backgroundColor="transparent"
+    cols={4}
+    gap="1rem"
+    paddingBlock="0.5rem"
+    className="footer-content"
+  >
+    {config.showSocialMedia && SOCIAL_MEDIA?.length > 0 && (
+      <Wrapper tag="div" display="flex" flexDirection="column" className="footer-section">
+        <Text tag="span" textColor="white" className="footer-title">Nos Réseaux Sociaux</Text>
+        <ul class="social-list">
+          <Wrapper tag="div" display="flex" flexDirection="column">
+          {SOCIAL_MEDIA.map((social) => (
+            <li>
+              <a href={social.url} target="_blank" rel="noopener noreferrer">
+                <Icon name={social.iconClass} title={social.name} size={32} class="social-icon" />
+              </a>
+            </li>
+          ))}
+          </Wrapper>
+        </ul>
+      </Wrapper>
+    )}
+
+    <!-- Column 2: Primary navigation -->
+    <Wrapper tag="div" display="flex" flexDirection="column" className="footer-section">
+      <Text tag="span" textColor="white" className="footer-title">Navigation Principale</Text>
+      {NAV_LINKS?.length > 0 ? (
+        <List
+          items={NAV_LINKS.map(link => ({ text: link.name, href: link.url }))}
+          showMarkers={false}
+          className="footer-links"
+        />
+      ) : <Wrapper tag="div" />}
+    </Wrapper>
+
+    <!-- Column 3: Secondary left -->
+    <Wrapper tag="div" display="flex" flexDirection="column" className="footer-section">
+      <Text tag="span" textColor="white" className="footer-title">Navigation Secondaire</Text>
+      {secondaryLeft?.length > 0 ? (
+        <List
+          items={secondaryLeft.map(link => ({ text: link.name, href: link.url }))}
+          showMarkers={false}
+          className="footer-links"
+        />
+      ) : <Wrapper tag="div" />}
+    </Wrapper>
+
+    <!-- Column 4: Secondary right / resources -->
+    <Wrapper tag="div" display="flex" flexDirection="column" className="footer-section">
+      <Text tag="span" textColor="white" className="footer-title">Mentions Légales</Text>
+      {secondaryRight?.length > 0 ? (
+        <List
+          items={secondaryRight.map(link => ({ text: link.name, href: link.url }))}
+          showMarkers={false}
+          className="footer-links"
+        />
+      ) : (
+        <Wrapper tag="div" />
+      )}
+    </Wrapper>
+  </Wrapper>
+
+  {config.showCopyright && (
+    <Wrapper tag="div" display="grid" backgroundColor="transparent" cols={1} paddingBlock="0.5rem">
+      <hr class="footer-divider" />
+      <Wrapper tag="div" className="footer-copyright">
+        <Text tag="p" textColor="muted">
+          <Link url={SITE_DEV_URL} target="_blank" rel="noopener noreferrer">{FOOTER_TEXT}</Link>
+        </Text>
+      </Wrapper>
+    </Wrapper>
+  )}
+</Section>
+
+<style>
+.footer-main {
+  border-top: var(--border-width-3) double white;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  gap: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    gap: var(--space-8);
+  }
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer-title {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.social-list {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  list-style: none;
+  padding: 0;
+}
+
+.social-icon {
+  color: white;
+  padding: var(--space-1);
+  background-color: var(--color-primary);
+  border: var(--border-width-1) solid transparent;
+  border-radius: var(--radius-pill);
+  transition: transform var(--transition-speed) ease, background-color var(--transition-speed) ease;
+}
+
+.social-icon:hover {
+  transform: scale(1.1);
+  background-color: var(--color-primary-hover);
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+.footer-divider {
+  margin: var(--space-2) 0;
+  border-color: var(--color-border);
+}
+
+.footer-copyright {
+  max-width: 80rem;
+  margin: 0 auto;
+  text-align: center;
+}
+</style>

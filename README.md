@@ -1,43 +1,107 @@
-# Astro Starter Kit: Minimal
+# Project Technical Structure
 
-```sh
-npm create astro@latest -- --template minimal
+## Packages
+
+- uvx & spec-kit: `uvx --from git+https://github.com/github/spec-kit.git specify init .`
+
+### Framework & UI
+
+- astro: `npm create astro@latest`
+- astro font: `npm i astro-font`
+- astro icon: `npm install astro-icon`
+- iconify mdi, openmoji, circleflags: `npm install @iconify-json/mdi @iconify-json/openmoji @iconify-json/circle-flags`
+
+### Database
+
+- pg and drizzle (with dev and prod config): `npm install pg drizzle-orm drizzle-kit`
+
+### Authentication
+
+- better-auth: `npm install better-auth`
+  - Plugins utilisés: admin, organization, username, email, verifemail
+- nodemailer: `npm install nodemailer`
+- dotenv: `npm install dotenv`
+
+## Dev Dependencies
+
+- @types/pg: `npm install -D @types/pg`
+- @types/nodemailer: `npm install -D @types/nodemailer`
+- @astrojs/check: `npm install -D @astrojs/check`
+- typescript: `npm install -D typescript`
+- tsx: `npm install -D tsx`
+
+## Alias and Folder Structures
+
+### @components
+
+Full UI atomic design elements with perfectly homogenized tokens CSS and light dark contrast check.
+
+```md
+src/components/
+├── atoms/
+├── cards/
+├── molecules/
+├── navigations/
+├── organisms/
+├── templates/
+├── FormattedDate.astro
+├── Grid.astro
+└── Grid2.astro
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### @layouts
 
-## 🚀 Project Structure
+BaseLayout.astro
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```md
+src/layouts/
+├── BaseLayout.astro
+└── StickyImageSection.astro
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### @styles
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+global.css
 
-Any static assets, like images, can be placed in the `public/` directory.
+```md
+src/styles/
+└── global.css
+```
 
-## 🧞 Commands
+### @database
 
-All commands are run from the root of the project, from a terminal:
+(lib/database)
+Drizzle config and folder schema and folder data for seeding.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```md
+src/database/
+├── data/
+├── schema/
+└── drizzle.ts
+```
 
-## 👀 Want to learn more?
+### @scripts
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Some useful scripts for development.
+
+### @smtp
+
+(lib/smtp) for SMTP config.
+
+```md
+src/lib/
+└── smtp/
+```
+
+## Testing
+
+### Vitest
+
+- **Installation**: `npm create vitest@latest`
+- **Scripts**:
+  - `npm run test`: Lancer les tests une fois.
+  - `npm run test:ci`: Lancer les tests avec vérification de type pour l'intégration continue.
+
+### Playwright
+
+- **Installation**: `npm init playwright@latest`

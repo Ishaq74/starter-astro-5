@@ -1,0 +1,125 @@
+---
+// Heading.astro
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'strong';
+  align?: 'center' | 'left' | 'right';
+  iconLeft?: string;
+  iconRight?: string;
+  iconSize?: number;
+  iconPosition?: 'left' | 'right' | 'both';
+  textColor?: string;
+  padding?: string;
+  paddingBlock?: string;
+  paddingInline?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingLeft?: string;
+  paddingRight?: string;
+  margin?: string;
+  marginBlock?: string;
+  marginInline?: string;
+  marginTop?: string;
+  marginBottom?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  border?: boolean;
+  borderColor?: string;
+  borderWidth?: string;
+  borderStyle?: string;
+  backgroundColor?: string;
+  className?: string;
+  style?: string;
+  [key: string]: any;
+}
+
+const {
+  tag = 'p',
+  align = 'center',
+  iconLeft,
+  iconRight,
+  iconSize = 24,
+  iconPosition = 'left',
+  textColor = 'black',
+  padding,
+  paddingBlock,
+  paddingInline,
+  paddingTop,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  margin,
+  marginBlock,
+  marginInline,
+  marginTop,
+  marginBottom,
+  marginLeft,
+  marginRight,
+  border = false,
+  borderColor = 'var(--color-border)',
+  borderWidth = 'var(--border-width-2)', // already tokenized, no change needed
+  borderStyle = 'solid',
+  backgroundColor,
+  className = '',
+  style: inlineStyle = '',
+  ...htmlAttributes
+} = Astro.props as Props;
+
+const validTags = ['h1','h2','h3','h4','h5','h6','p','span'];
+const HeadingTag = validTags.includes(tag) ? tag : 'p';
+
+const justifyContentClass = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}[align] ?? 'justify-center';
+
+const cssColor = `var(--color-${textColor})`;
+
+const { variant, ...rest } = htmlAttributes;
+const classes = variant ? variant : '';
+---
+
+<HeadingTag class={classes} style={inlineStyle} {...rest}>
+  <style is:inline>
+    p, span, strong, h1, h2, h3, h4, h5, h6 {
+      font-family: system-ui, sans-serif;
+      color: var(--color-text);
+      background: var(--color-background);
+      margin: 0;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      transition: color var(--transition-speed) ease, background var(--transition-speed) ease;
+    }
+    p[class~="primary"], span[class~="primary"], strong[class~="primary"], h1[class~="primary"], h2[class~="primary"], h3[class~="primary"], h4[class~="primary"], h5[class~="primary"], h6[class~="primary"] {
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      font-weight: 700;
+    }
+    p[class~="secondary"], span[class~="secondary"], strong[class~="secondary"], h1[class~="secondary"], h2[class~="secondary"], h3[class~="secondary"], h4[class~="secondary"], h5[class~="secondary"], h6[class~="secondary"] {
+      color: var(--color-secondary);
+      background: var(--color-secondary-light);
+      font-weight: 700;
+    }
+    p[class~="accent"], span[class~="accent"], strong[class~="accent"], h1[class~="accent"], h2[class~="accent"], h3[class~="accent"], h4[class~="accent"], h5[class~="accent"], h6[class~="accent"] {
+      color: var(--color-accent);
+      background: var(--color-accent-light);
+      font-weight: 700;
+    }
+  </style>
+  {(iconLeft || iconRight) ? (
+    <>
+      {(iconLeft && (iconPosition === 'left' || iconPosition === 'both')) && (
+        <Icon name={iconLeft} size={iconSize} style="margin-inline-end: var(--space-2);" />
+      )}
+      <slot />
+      {(iconRight && (iconPosition === 'right' || iconPosition === 'both')) && (
+        <Icon name={iconRight} size={iconSize} style="margin-inline-start: var(--space-2);" />
+      )}
+    </>
+  ) : (
+    <slot />
+  )}
+</HeadingTag>

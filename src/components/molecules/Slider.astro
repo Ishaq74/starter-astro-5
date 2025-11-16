@@ -1,0 +1,381 @@
+---
+interface Props {
+  preset?: 'default' | 'primary' | 'secondary' | 'accent';
+  className?: string;
+  gap?: string;
+  itemMinWidth?: string;
+  showScrollbar?: boolean;
+  autoScroll?: boolean;
+  scrollSpeed?: number;
+  pauseOnHover?: boolean;
+}
+
+const {
+  preset = 'default',
+  className = '',
+  gap = 'var(--space-5)',
+  itemMinWidth = 'var(--size-slider-item-min-width, 17.5rem)',
+  showScrollbar = false,
+  autoScroll = false,
+  scrollSpeed = 50,
+  pauseOnHover = true
+} = Astro.props;
+
+// Presets configuration
+const presets = {
+  default: {
+    padding: 'var(--space-4)',
+    backgroundColor: 'transparent',
+    borderRadius: 'var(--radius-2)',
+    shadow: 'none',
+    itemBg: 'var(--color-surface)',
+    itemBorder: '1px solid var(--color-border)'
+  },
+  primary: {
+    padding: 'var(--space-5)',
+    backgroundColor: 'var(--color-primary-light)',
+    borderRadius: 'var(--radius-3)',
+    shadow: 'var(--elevation-e3)',
+    itemBg: 'var(--color-surface)',
+    itemBorder: '2px solid var(--color-primary)'
+  },
+  secondary: {
+    padding: 'var(--space-4)',
+    backgroundColor: 'var(--color-secondary-light)',
+    borderRadius: 'var(--radius-1)',
+    shadow: 'var(--elevation-e2)',
+    itemBg: 'var(--color-surface)',
+    itemBorder: '1px dashed var(--color-secondary)'
+  },
+  accent: {
+    padding: 'var(--space-5)',
+    backgroundColor: 'var(--color-accent-light)',
+    borderRadius: 'var(--radius-4)',
+    shadow: 'var(--elevation-e4)',
+    itemBg: 'var(--color-surface)',
+    itemBorder: '1px solid var(--color-accent)'
+  }
+};
+
+const currentPreset = presets[preset];
+---
+
+<div
+  class={`slider-wrapper preset-slider-${preset} ${className}`}
+  style={`
+    --slider-gap: ${gap};
+    --slider-item-min-width: ${itemMinWidth};
+    --slider-scroll-speed: ${scrollSpeed}s;
+    ${showScrollbar ? '' : '--slider-scrollbar-display: none;'}
+  `}
+  data-auto-scroll={autoScroll}
+  data-pause-on-hover={pauseOnHover}
+>
+  <div class="slider-container">
+    <ul class="slider-list">
+      <slot />
+    </ul>
+  </div>
+  
+  <div class="slider-controls">
+    <button class="slider-button slider-button--prev" aria-label="Scroll left">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="slider-button slider-button--next" aria-label="Scroll right">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style is:inline>
+  .slider-wrapper {
+    position: relative;
+    padding: var(--preset-padding);
+    background: var(--preset-bg);
+    border-radius: var(--preset-border-radius);
+    box-shadow: var(--preset-shadow);
+    overflow: hidden;
+  }
+
+  .slider-container {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slider-list {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--slider-gap);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    
+    scrollbar-width: var(--slider-scrollbar-display, none);
+    -ms-overflow-style: var(--slider-scrollbar-display, none);
+  }
+
+  .slider-list::-webkit-scrollbar {
+    display: var(--slider-scrollbar-display, none);
+    height: 8px;
+  }
+
+  .slider-list::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+    border-radius: var(--radius-1);
+  }
+
+  .slider-list::-webkit-scrollbar-track {
+    background-color: color-mix(in srgb, var(--color-text) 15%, transparent);
+  }
+
+  .slider-list > * {
+    flex: 0 0 var(--slider-item-min-width);
+    min-width: var(--slider-item-min-width);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+    
+    background: var(--preset-item-bg);
+    border: var(--preset-item-border);
+    border-radius: calc(var(--preset-border-radius) * 0.5);
+    padding: var(--space-5);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  }
+
+  .slider-list > *:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-e3);
+  }
+
+  .slider-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 var(--space-2);
+    pointer-events: none;
+  }
+
+  .slider-button {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-circle);
+    border: none;
+    background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed) ease;
+    pointer-events: auto;
+    box-shadow: var(--elevation-e2);
+    opacity: 0.8;
+  }
+
+  .slider-button:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: var(--elevation-e3);
+  }
+
+  .slider-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: var(--space-1);
+  }
+
+  .slider-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Auto-scroll animation */
+  .slider-wrapper[data-auto-scroll="true"] .slider-list {
+    animation: slider-auto-scroll var(--slider-scroll-speed) linear infinite;
+  }
+
+  .slider-wrapper[data-pause-on-hover="true"]:hover .slider-list {
+    animation-play-state: paused;
+  }
+
+  @keyframes slider-auto-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Preset Styles */
+  .preset-slider-default {
+    --preset-padding: var(--space-5);
+    --preset-bg: transparent;
+    --preset-border-radius: var(--radius-2);
+    --preset-shadow: none;
+    --preset-item-bg: var(--color-surface);
+    --preset-item-border: 1px solid var(--color-border);
+  }
+
+  .preset-slider-primary {
+    --preset-padding: var(--space-8);
+    --preset-bg: var(--color-primary-light);
+    --preset-border-radius: var(--radius-3);
+    --preset-shadow: var(--elevation-e3);
+    --preset-item-bg: var(--color-surface);
+    --preset-item-border: 2px solid var(--color-primary);
+  }
+
+  .preset-slider-secondary {
+    --preset-padding: var(--space-5);
+    --preset-bg: var(--color-secondary-light);
+    --preset-border-radius: var(--radius-1);
+    --preset-shadow: var(--elevation-e2);
+    --preset-item-bg: var(--color-surface);
+    --preset-item-border: 1px dashed var(--color-secondary);
+  }
+
+  .preset-slider-accent {
+    --preset-padding: var(--space-8);
+    --preset-bg: var(--color-accent-light);
+    --preset-border-radius: var(--radius-4);
+    --preset-shadow: var(--elevation-e4);
+    --preset-item-bg: var(--color-surface);
+    --preset-item-border: 1px solid var(--color-accent);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .slider-wrapper {
+      --slider-item-min-width: 250px;
+    }
+
+    .slider-button {
+      width: 36px;
+      height: 36px;
+    }
+
+    .slider-controls {
+      padding: 0 var(--space-1);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .slider-wrapper {
+      --slider-item-min-width: 200px;
+    }
+
+    .slider-button {
+      width: 32px;
+      height: 32px;
+    }
+
+    .preset-slider-primary,
+    .preset-slider-accent {
+      --preset-padding: var(--space-5);
+    }
+
+    .preset-slider-secondary {
+      --preset-padding: var(--space-3);
+    }
+  }
+</style>
+
+<script is:inline>
+  class SliderComponent {
+    constructor(slider) {
+      this.slider = slider;
+      this.list = slider.querySelector('.slider-list');
+      this.prevButton = slider.querySelector('.slider-button--prev');
+      this.nextButton = slider.querySelector('.slider-button--next');
+      
+      this.scrollAmount = 280; // Default scroll amount
+      
+      this.init();
+    }
+
+    init() {
+      this.bindEvents();
+      this.updateButtons();
+    }
+
+    bindEvents() {
+      if (this.prevButton) {
+        this.prevButton.addEventListener('click', () => this.scrollLeft());
+      }
+      
+      if (this.nextButton) {
+        this.nextButton.addEventListener('click', () => this.scrollRight());
+      }
+
+      // Update button states on scroll
+      this.list.addEventListener('scroll', () => this.updateButtons());
+
+      // Keyboard navigation
+      this.slider.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') this.scrollLeft();
+        if (e.key === 'ArrowRight') this.scrollRight();
+      });
+
+      // Touch/swipe support
+      let startX = 0;
+      let scrollLeft = 0;
+
+      this.list.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - this.list.offsetLeft;
+        scrollLeft = this.list.scrollLeft;
+      });
+
+      this.list.addEventListener('touchmove', (e) => {
+        if (!startX) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - this.list.offsetLeft;
+        const walk = (x - startX) * 2;
+        this.list.scrollLeft = scrollLeft - walk;
+      });
+
+      this.list.addEventListener('touchend', () => {
+        startX = 0;
+      });
+    }
+
+    scrollLeft() {
+      this.list.scrollBy({
+        left: -this.scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    scrollRight() {
+      this.list.scrollBy({
+        left: this.scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+
+    updateButtons() {
+      const isAtStart = this.list.scrollLeft <= 0;
+      const isAtEnd = this.list.scrollLeft >= this.list.scrollWidth - this.list.clientWidth - 1;
+
+      if (this.prevButton) {
+        this.prevButton.disabled = isAtStart;
+      }
+      if (this.nextButton) {
+        this.nextButton.disabled = isAtEnd;
+      }
+    }
+  }
+
+  // Initialize all sliders
+  document.addEventListener('DOMContentLoaded', () => {
+    const sliders = document.querySelectorAll('.slider-wrapper');
+    sliders.forEach(slider => new SliderComponent(slider));
+  });
+</script>

@@ -1,0 +1,146 @@
+---
+// Wrapper.astro
+interface Props {
+  tag?: 'div' | 'section' | 'article' | 'aside' | 'main' | 'header' | 'footer' | 'nav';
+  variant?: 'default' | 'primary' | 'secondary' | 'accent';
+  display?: 'block' | 'flex' | 'grid' | 'inline-flex' | 'inline-grid';
+  cols?: 1 | 2 | 3 | 4 | 5 | 6 | 'auto-fit' | 'auto-fill';
+  autoFit?: boolean;
+  autoFill?: boolean;
+  gridTemplateColumns?: string;
+  gap?: string;
+  rowGap?: string;
+  columnGap?: string;
+  flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
+  flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'baseline' | 'stretch';
+  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
+  alignContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'stretch';
+  padding?: string;
+  paddingBlock?: string;
+  paddingInline?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingLeft?: string;
+  paddingRight?: string;
+  margin?: string;
+  marginBlock?: string;
+  marginInline?: string;
+  marginTop?: string;
+  marginBottom?: string;
+  marginLeft?: string;
+  marginRight?: string;
+  width?: string;
+  height?: string;
+  maxWidth?: string;
+  minHeight?: string;
+  className?: string;
+  style?: string;
+  [key: string]: any;
+}
+
+const {
+  tag = 'div',
+  variant = 'default',
+  display = 'block',
+  cols,
+  autoFit,
+  autoFill,
+  gridTemplateColumns,
+  gap,
+  rowGap,
+  columnGap,
+  flexDirection,
+  flexWrap,
+  alignItems = 'stretch',
+  justifyContent = 'flex-start',
+  alignContent = 'stretch',
+  padding,
+  paddingBlock,
+  paddingInline,
+  paddingTop,
+  paddingBottom,
+  paddingLeft,
+  paddingRight,
+  margin,
+  marginBlock,
+  marginInline,
+  marginTop,
+  marginBottom,
+  marginLeft,
+  marginRight,
+  width,
+  height,
+  maxWidth,
+  minHeight,
+  className = '',
+  style: inlineStyle = '',
+  ...restProps
+} = Astro.props as Props;
+
+const Tag = tag;
+
+// construction des classes
+const classParts: string[] = [];
+
+// variant (juste le nom pour le CSS)
+if (variant) classParts.push(`w-${variant}`);
+
+// display
+classParts.push(
+  display === 'grid' ? 'w-grid' :
+  display === 'flex' ? 'w-flex' :
+  display === 'inline-flex' ? 'w-inline-flex' : 'w-block'
+);
+
+// grid columns
+if (display === 'grid') {
+  if (typeof cols === 'number') classParts.push(`w-cols-${cols}`);
+  else if (cols === 'auto-fit' || autoFit) classParts.push('w-cols-auto-fit');
+  else if (cols === 'auto-fill' || autoFill) classParts.push('w-cols-auto-fill');
+}
+
+// gaps
+if (gap) classParts.push(`w-gap-${gap.replace(/[^0-9]/g,'')}`);
+if (rowGap) classParts.push(`w-rowgap-${rowGap.replace(/[^0-9]/g,'')}`);
+if (columnGap) classParts.push(`w-colgap-${columnGap.replace(/[^0-9]/g,'')}`);
+
+// flex
+if (flexDirection) classParts.push(`w-flex-${flexDirection}`);
+if (flexWrap) classParts.push(`w-flex-${flexWrap}`);
+
+// alignments
+classParts.push(`w-items-${alignItems.replace('flex-','')}`);
+classParts.push(`w-justify-${justifyContent.replace('flex-','')}`);
+classParts.push(`w-content-${alignContent.replace('flex-','')}`);
+
+// spacing
+if (padding) classParts.push(`w-p-${padding.replace(/[^0-9]/g,'')}`);
+if (paddingBlock) classParts.push(`w-pb-${paddingBlock.replace(/[^0-9]/g,'')}`);
+if (paddingInline) classParts.push(`w-pi-${paddingInline.replace(/[^0-9]/g,'')}`);
+if (paddingTop) classParts.push(`w-pt-${paddingTop.replace(/[^0-9]/g,'')}`);
+if (paddingBottom) classParts.push(`w-pb-${paddingBottom.replace(/[^0-9]/g,'')}`);
+if (paddingLeft) classParts.push(`w-pl-${paddingLeft.replace(/[^0-9]/g,'')}`);
+if (paddingRight) classParts.push(`w-pr-${paddingRight.replace(/[^0-9]/g,'')}`);
+
+if (margin) classParts.push(`w-m-${margin.replace(/[^0-9]/g,'')}`);
+if (marginTop) classParts.push(`w-mt-${marginTop.replace(/[^0-9]/g,'')}`);
+if (marginBottom) classParts.push(`w-mb-${marginBottom.replace(/[^0-9]/g,'')}`);
+if (marginLeft) classParts.push(`w-ml-${marginLeft.replace(/[^0-9]/g,'')}`);
+if (marginRight) classParts.push(`w-mr-${marginRight.replace(/[^0-9]/g,'')}`);
+
+// sizes
+if (width) classParts.push(`w-w-${width.replace(/[^0-9]/g,'')}`);
+if (height) classParts.push(`w-h-${height.replace(/[^0-9]/g,'')}`);
+if (maxWidth) classParts.push(`w-maxw-${maxWidth.replace(/[^0-9]/g,'')}`);
+if (minHeight) classParts.push(`w-minh-${minHeight.replace(/[^0-9]/g,'')}`);
+
+// inline style résiduel
+let inline = '';
+if (gridTemplateColumns) inline += `grid-template-columns:${gridTemplateColumns};`;
+if (inlineStyle) inline += inlineStyle;
+
+---
+<Tag class={`${classParts.join(' ')} ${className}`} style={inline} {...restProps}>
+  <slot />
+</Tag>

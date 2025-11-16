@@ -1,0 +1,87 @@
+// Data extracted from data/gallery.sqlite
+export const galleryData = [
+  {
+    id: 1,
+    slug: 'look-mariee-romantique',
+    title: 'Look Mariée Romantique',
+  description: "Maquillage mariée romantique à Annecy : mise en beauté naturelle, tons poudrés, éclat lumineux parfait pour photos de mariage à Annecy.",
+    category: 'Mariage',
+    service_id: 1,
+  images: ["look-mariee-romantique-annecy.jpg"],
+  featured_image: 'look-mariee-romantique-annecy.jpg',
+    is_featured: true,
+    sort_order: 1,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  },
+  {
+    id: 2,
+    slug: 'glamour-sophistique',
+    title: 'Glamour Sophistiqué',
+  description: "Maquillage glamour sophistiqué à Annecy : regard intense, lèvres sculpturales, idéal pour soirées et événements haut de gamme à Annecy.",
+    category: 'Soirée',
+    service_id: 1,
+  images: ["glamour-sophistique-annecy.jpg"],
+  featured_image: 'glamour-sophistique-annecy.jpg',
+    is_featured: true,
+    sort_order: 2,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  },
+  {
+    id: 3,
+    slug: 'beaute-naturelle',
+    title: 'Beauté Naturelle',
+  description: "Maquillage beauté naturelle à Annecy : techniques no-makeup makeup pour révéler l’éclat authentique, idéal pour shooting et quotidien.",
+    category: 'Naturel',
+    service_id: 3,
+  images: ["beaute-naturelle-annecy.jpg"],
+  featured_image: 'beaute-naturelle-annecy.jpg',
+    is_featured: false,
+    sort_order: 3,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  },
+  {
+    id: 4,
+    slug: 'creation-artistique',
+    title: 'Création Artistique',
+  description: "Maquillage artistique à Annecy : création originale pour shootings photo, événements spéciaux, expression créative locale.",
+    category: 'Artistique',
+    service_id: 2,
+  images: ["creation-artistique-annecy.jpg"],
+  featured_image: 'creation-artistique-annecy.jpg',
+    is_featured: true,
+    sort_order: 4,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  },
+  {
+    id: 5,
+    slug: 'elegance-classique',
+    title: 'Élégance Classique',
+  description: "Maquillage élégance classique à Annecy : style chic, intemporel et raffiné pour mariages et événements privés à Annecy.",
+    category: 'Mariage',
+    service_id: 4,
+  images: ["elegance-classique-annecy.jpg"],
+  featured_image: 'elegance-classique-annecy.jpg',
+    is_featured: false,
+    sort_order: 5,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  },
+  {
+    id: 6,
+    slug: 'rouge-passion',
+    title: 'Rouge Passion',
+  description: "Maquillage rouge passion à Annecy : look audacieux, rouges intenses, idéal pour femmes affirmées lors de soirées à Annecy.",
+    category: 'Soirée',
+    service_id: 1,
+  images: ["rouge-passion-annecy.jpg"],
+  featured_image: 'rouge-passion-annecy.jpg',
+    is_featured: false,
+    sort_order: 6,
+    created_at: '2025-08-10 19:09:40',
+    updated_at: '2025-08-10 19:09:40'
+  }
+];

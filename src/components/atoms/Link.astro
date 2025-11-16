@@ -1,0 +1,144 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  tag?: 'a' | 'button';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  ariaLabel?: string;
+  text?: string;
+  icon?: {
+    name: string;
+    side?: 'left' | 'right';
+  };
+  shape?: 'sharp' | 'rounded' | 'circle';
+  shadow?: boolean;
+  border?: boolean;
+  borderColor?: string;
+  borderWidth?: string;
+  borderStyle?: 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset';
+  textColor?: string;
+  backgroundColor?: string;
+  textAlign?: 'left' | 'center' | 'right';
+  padding?: string;
+  margin?: string;
+  width?: string;
+  className?: string;
+  style?: string;
+  [key: string]: any;
+}
+
+const {
+  tag = 'a',
+  href,
+  type = 'button',
+  ariaLabel,
+  text,
+  icon,
+  shape = 'rounded',
+  shadow = false,
+  border = false,
+  borderColor = 'primary',
+  borderWidth = '1px',
+  borderStyle = 'solid',
+  textColor = 'primary',
+  backgroundColor,
+  textAlign = 'center',
+  padding = 'var(--space-3) var(--space-5)',
+  margin,
+  width,
+  className = '',
+  style: inlineStyle = '',
+  variant,
+  ...htmlAttributes
+} = Astro.props as Props;
+
+const Tag = tag;
+
+const designTokens = [
+  'primary', 'secondary', 'accent', 'background', 'text', 'border', 'hover', 'focus',
+  'warning', 'info', 'disabled', 'muted', 'surface', 'shadow', 'shadow-dark',
+  'error', 'success',
+  'primary-light', 'secondary-light', 'accent-light',
+  'primary-dark', 'secondary-dark', 'accent-dark', 'background-dark', 'text-dark',
+  'border-dark', 'hover-dark', 'surface-dark', 'muted-dark'
+];
+
+function isDesignToken(color: string) {
+  return designTokens.includes(color);
+}
+
+const cssTextColor = isDesignToken(textColor) ? `var(--color-${textColor})` : textColor;
+const cssBackgroundColor = backgroundColor ? (isDesignToken(backgroundColor) ? `var(--color-${backgroundColor})` : backgroundColor) : undefined;
+const cssBorderColor = isDesignToken(borderColor) ? `var(--color-${borderColor})` : borderColor;
+
+const classes = variant ? variant : '';
+
+const style = [
+  `color: ${cssTextColor};`,
+  cssBackgroundColor ? `background-color: ${cssBackgroundColor};` : '',
+  border ? `border: ${borderWidth} ${borderStyle} ${cssBorderColor};` : '',
+  padding ? `padding: ${padding};` : '',
+  margin ? `margin: ${margin};` : '',
+  width ? `width: ${width};` : '',
+  inlineStyle,
+].filter(Boolean).join(' ');
+---
+
+<Tag
+  class={classes}
+  style={style}
+  href={tag === 'a' ? href : undefined}
+  type={tag === 'button' ? type : undefined}
+  aria-label={ariaLabel}
+  {...htmlAttributes}
+>
+  {icon?.side === 'left' && <Icon name={icon.name} />}
+  {text ? text : <slot />}
+  {icon?.side === 'right' && <Icon name={icon.name} />}
+</Tag>
+
+<style is:inline>
+  a, button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    user-select: none;
+    color: var(--color-primary);
+    background: var(--color-background);
+    border: none;
+    font-size: 1rem;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-3);
+  }
+  a[class~="primary"], button[class~="primary"] {
+    color: var(--color-text-dark);
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
+  }
+  a[class~="secondary"], button[class~="secondary"] {
+    color: var(--color-text);
+    background: var(--color-secondary-light);
+    border-color: var(--color-secondary);
+  }
+  a[class~="accent"], button[class~="accent"] {
+    color: var(--color-text);
+    background: var(--color-accent-light);
+    border-color: var(--color-accent);
+  }
+  a:hover, button:hover {
+    filter: brightness(1.05);
+  }
+  a:active, button:active {
+    transform: scale(0.97);
+  }
+  a svg, button svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+</style>

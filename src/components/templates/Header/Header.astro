@@ -1,0 +1,77 @@
+---
+export const prerender = false;
+
+import { authClient } from "@lib/auth/auth-client";
+
+import { Icon } from 'astro-icon/components';
+import Section from '@atoms/Section.astro';
+import Wrapper from '@atoms/Wrapper.astro';
+
+import Brand from '@components/templates/Header/Brand.astro';
+import Navigation from '@components/templates/Header/Navigation.astro';
+import Search from '@components/templates/Header/Search.astro';
+import ThemeSwitch from '@components/templates/Header/ThemeSwitch.astro';
+import LangSwitch from '@components/templates/Header/LangSwitch.astro';
+// UserMenu intentionally not shown in compact header row; keep import if needed later
+
+const session = () => {
+    if (Astro.locals.session) {
+        return Astro.locals.session;
+    } else {
+        // Redirect to login page if the user is not authenticated
+        return Astro.redirect("/login");
+    }
+}
+
+let user = Astro.locals.user;
+
+const handleLogout = async (event: Event) => {
+  event.preventDefault();
+  await authClient.signOut();
+  window.location.href = "/connexion";
+};
+
+---
+
+<!-- Header top: Brand on left, controls (lang, theme, social, search) on right -->
+<Section tag="header" xPadding="var(--space-4)" yPadding="var(--space-3)" className="header-top" backgroundColor="var(--color-text)">
+  <Wrapper display="grid" style="grid-template-columns: 1fr auto; align-items: center;">
+    <Wrapper display="grid" style="grid-auto-flow: row; gap: .25rem;" className="brand-stack">
+      <Brand />
+    </Wrapper>
+
+    <Wrapper display="flex" gap="0.75rem" alignItems="center" justifyContent="flex-end" className="header-controls">
+      <Search />
+      <Wrapper display="flex" alignItems="center" tag="button" style="background:transparent;border:none;padding:.25rem;" aria-label="Se connecter">
+        <Icon name="mdi:account" size={22} />
+      </Wrapper>
+      <LangSwitch />
+      <ThemeSwitch />
+    </Wrapper>
+  </Wrapper>
+</Section>
+
+<Wrapper tag="nav" display="flex" className="nav-row" backgroundColor="var(--color-primary)">
+  <Wrapper display="flex" justifyContent="center" className="nav-menu" style="width:100%;">
+    <Navigation />
+  </Wrapper>
+</Wrapper>
+
+<style>
+.header-top { border-bottom: 3px double var(--color-border); }
+
+.brand-stack { justify-items: start; }
+
+.header-controls { display:flex; align-items:center; gap: var(--space-3); }
+
+.nav-row { border-bottom: var(--border-width-3) double var(--color-border); box-shadow: var(--elevation-e3); }
+
+.nav-menu { display:flex; gap: var(--space-4); align-items:center; }
+
+@media (max-width: 767px) {
+  .nav-menu { flex-wrap: wrap; justify-content: center; }
+  .header-controls { gap: .5rem; }
+}
+</style>
+
+<!-- No runtime hamburger script — header is CSS-first and responsive. -->

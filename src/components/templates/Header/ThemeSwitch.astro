@@ -1,0 +1,132 @@
+<label for="theme-switcher" class="theme-switcher-label" aria-label="Toggle dark mode">
+        <input type="checkbox" id="theme-switcher" class="theme-switcher-input">
+        <span class="theme-switcher-slider">
+            <!-- Light mode: sky and clouds -->
+            <span class="theme-bg theme-bg--day" aria-hidden="true">
+                <span class="cloud" style="top:var(--space-2); left:var(--space-3);"></span>
+                <span class="cloud" style="top:var(--space-4); left:var(--space-7); width:var(--space-4); height:var(--space-2);"></span>
+                <span class="sky" style="top:0; left:0;"></span>
+            </span>
+            <!-- Dark mode: stars -->
+            <span class="theme-bg theme-bg--night" aria-hidden="true">
+                <span class="star" style="top:var(--space-2); left:var(--space-3);"></span>
+                <span class="star" style="top:var(--space-5); left:var(--space-8); width:2px; height:2px;"></span>
+                <span class="star" style="top:var(--space-3); left:var(--space-6); width:1.5px; height:1.5px;"></span>
+                <span class="star" style="top:var(--space-2); left:var(--space-8); width:1.2px; height:1.2px;"></span>
+            </span>
+        </span>
+        <span class="theme-switcher-icon sun" aria-hidden="true" style="font-size: 1.8rem; left: var(--space-2);">☀️</span>
+        <span class="theme-switcher-icon moon" aria-hidden="true" style="font-size: 1.8rem; right: var(--space-2);">🌙</span>
+</label>
+<style is:global>
+.theme-switcher-label {
+    position: relative;
+    display: inline-block;
+    width: 4.875rem;
+    height: 2.625rem;
+    cursor: pointer;
+}
+.theme-switcher-input { opacity: 0; width: 0; height: 0; }
+/* Remove slider background and knob for a minimal emoji-only switcher */
+.theme-switcher-slider {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-border);
+    border-radius: var(--radius-pill);
+    transition: background-color var(--transition-speed) ease;
+    z-index: 0;
+    overflow: hidden;
+}
+html[data-theme="dark"] .theme-switcher-slider {
+    background-color: var(--color-surface-dark);
+}
+.theme-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+}
+.theme-bg--day {
+    opacity: 1;
+}
+html[data-theme="dark"] .theme-bg--day {
+    opacity: 0;
+}
+.theme-bg--night {
+    opacity: 0;
+}
+html[data-theme="dark"] .theme-bg--night {
+    opacity: 1;
+}
+.cloud {
+    position: absolute;
+    width: var(--space-3);
+    height: var(--space-2);
+    background: var(--color-surface);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--space-1) 0 0 0 var(--color-surface), var(--space-2) 0 0 0 var(--color-surface);
+    opacity: 0.7;
+}
+.sky {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-surface) 100%);
+    z-index: -1;
+}
+.star {
+    position: absolute;
+    width: var(--border-width-2);
+    height: var(--border-width-2);
+    background: var(--color-surface);
+    border-radius: var(--radius-circle);
+    opacity: 0.8;
+    box-shadow: 0 0 var(--border-width-2) var(--border-width-1) var(--color-surface);
+}
+.theme-switcher-icon { position: absolute; top: 50%; transform: translateY(-50%); color: var(--color-accent); }
+.theme-switcher-icon.sun { left: var(--space-2); opacity: 1; }
+.theme-switcher-icon.moon { right: var(--space-2); opacity: 0; color: var(--color-primary); }
+html[data-theme="dark"] .theme-switcher-icon.sun { opacity: 0; }
+html[data-theme="dark"] .theme-switcher-icon.moon { opacity: 1; }
+</style>
+
+<script type="module">
+document.addEventListener('DOMContentLoaded', () => {
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const html = document.documentElement;
+
+    function setThemeUI(isDark) {
+        if (isDark) {
+            html.classList.add('dark'); // backward compatibility for existing styles
+            html.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeSwitcher.checked = true;
+        } else {
+            html.classList.remove('dark');
+            html.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeSwitcher.checked = false;
+        }
+    }
+
+    // Initial state
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setThemeUI(savedTheme === 'dark' || (!savedTheme && prefersDark));
+
+    themeSwitcher.addEventListener('change', (e) => {
+        setThemeUI(e.target.checked);
+    });
+
+    // Listen to system changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+            setThemeUI(e.matches);
+        }
+    });
+});
+</script>
