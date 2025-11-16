@@ -3,8 +3,14 @@
 type MapPreset = 'primary' | 'secondary' | 'accent';
 type MapLayer = 'mapnik' | 'cyclemap' | 'transportmap' | 'hot';
 
+interface SiteIdentity {
+  name?: string;
+  geo?: { latitude: number; longitude: number };
+  [key: string]: any;
+}
+
 interface Props {
-  org: Organization | null | undefined;
+  siteidentity: SiteIdentity | null | undefined;
   preset?: MapPreset;
   zoom?: number; // Zoom level (1-19)
   layer?: MapLayer; // Type de carte
@@ -13,21 +19,20 @@ interface Props {
 
 // 1. DÉFINITION DES PROPS AVEC VALEURS PAR DÉFAUT
 const { 
-  org,
+  siteidentity,
   preset, // Pas de valeur par défaut pour le preset, on le gère plus bas
   zoom = 15,
   layer = 'mapnik',
   showMarker = true
 } = Astro.props;
 
-// 2. LOGIQUE DE L'URL (inchangée)
+// 2. LOGIQUE DE L'URL (adaptée à siteidentity)
 let embedUrl: string | undefined;
-if (org && org.geo && typeof org.geo === 'object' && 'latitude' in org.geo && 'longitude' in org.geo) {
-  const lat = org.geo.latitude;
-  const lon = org.geo.longitude;
+if (siteidentity && siteidentity.geo && typeof siteidentity.geo === 'object' && 'latitude' in siteidentity.geo && 'longitude' in siteidentity.geo) {
+  const lat = siteidentity.geo.latitude;
+  const lon = siteidentity.geo.longitude;
 
   // Calcul dynamique de la "bounding box" basé sur le niveau de zoom
-  // Un zoom plus élevé signifie une boîte plus petite.
   const lat_range = 180 / Math.pow(2, zoom);
   const lon_range = 360 / Math.pow(2, zoom);
 
@@ -62,7 +67,7 @@ const presetClass = preset ? `map-preset-${preset}` : '';
     marginheight="0"
     marginwidth="0"
     src={embedUrl}
-    title={`Carte OpenStreetMap montrant la localisation de ${org?.name ?? 'notre entreprise'}`}
+    title={`Carte OpenStreetMap montrant la localisation de ${siteidentity?.name ?? 'notre site'}`}
   >
   </iframe>
 ) : (

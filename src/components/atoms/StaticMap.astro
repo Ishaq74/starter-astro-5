@@ -3,26 +3,40 @@ import { Icon } from "astro-icon/components";
 import Text from "@atoms/Text.astro";
 
 // 1. LOGIQUE ENTIÈREMENT ENCAPSULÉE DANS L'ATOME
-const { org } = Astro.locals;
+type SiteIdentity = {
+  name?: string;
+  geo?: { latitude: number; longitude: number };
+  streetaddress?: string;
+  postalCode?: string;
+  addressLocality?: string;
+  addressCountry?: string;
+  [key: string]: any;
+};
+
+interface Props {
+  siteidentity: SiteIdentity | null | undefined;
+}
+
+const { siteidentity } = Astro.props;
 let interactiveMapUrl: string | undefined;
 let mapAriaLabel: string | undefined;
 
-if (org) {
+if (siteidentity) {
   // Priorité 1: Coordonnées GEO
-  if (org.geo && typeof org.geo === 'object' && 'latitude' in org.geo && 'longitude' in org.geo) {
-    const lat = org.geo.latitude;
-    const lon = org.geo.longitude;
+  if (siteidentity.geo && typeof siteidentity.geo === 'object' && 'latitude' in siteidentity.geo && 'longitude' in siteidentity.geo) {
+    const lat = siteidentity.geo.latitude;
+    const lon = siteidentity.geo.longitude;
     interactiveMapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
   }
   // Priorité 2: Adresse complète
-  else if (org.streetaddress) {
-    const fullAddress = `${org.streetaddress}, ${org.postalCode ?? ''} ${org.addressLocality ?? ''}, ${org.addressCountry ?? ''}`;
+  else if (siteidentity.streetaddress) {
+    const fullAddress = `${siteidentity.streetaddress}, ${siteidentity.postalCode ?? ''} ${siteidentity.addressLocality ?? ''}, ${siteidentity.addressCountry ?? ''}`;
     interactiveMapUrl = `https://www.openstreetmap.org/search?query=${encodeURIComponent(fullAddress.trim())}`;
   }
 
   // Préparation du label pour l'accessibilité
   if (interactiveMapUrl) {
-    mapAriaLabel = `Voir ${org.name ?? 'notre localisation'} sur une carte interactive`;
+    mapAriaLabel = `Voir ${siteidentity.name ?? 'notre localisation'} sur une carte interactive`;
   }
 }
 ---
