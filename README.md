@@ -20,8 +20,7 @@ Que vous soyez un développeur expérimenté, un designer, un gestionnaire de pr
 * [Principes Généraux](#principes-généraux)
 * [Conventions d'Atomic Design](#conventions-datomic-design)
 
-3. [**Démarrage Rapide (Développement)**]
-(#3-démarrage-rapide-développement)
+3. [**Démarrage Rapide (Développement)**](#3-démarrage-rapide-développement)
 
 * [Prérequis](#prérequis)
 * [Installation & Configuration Initiale](#installation--configuration-initiale)
@@ -157,13 +156,14 @@ npm run migrate
 
 1. **Démarrage du Serveur :**
 
-```bash
-npm run dev
-```
+  ```bash
+  npm run dev
+  ```
 
 2. **Accès au Site & au Design System :**
-    Ouvrez votre navigateur à l'adresse indiquée par le serveur (généralement `http://localhost:4321`).
-    Visitez la page du **Design System** à l'adresse [http://localhost:4321/docs/theme](http://localhost:4321/docs/theme) pour explorer la documentation et la vitrine des composants.
+
+Ouvrez votre navigateur à l'adresse indiquée par le serveur (généralement `http://localhost:4321`).
+Visitez la page du **Design System** à l'adresse [http://localhost:4321/docs/theme](http://localhost:4321/docs/theme) pour explorer la documentation et la vitrine des composants.
 
 ---
 
