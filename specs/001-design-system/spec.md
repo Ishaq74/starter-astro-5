@@ -1,8 +1,8 @@
 # Feature Specification: Design System
 
-**Feature Branch**: `001-design-system`
+**Feature Branch**: `main`
 **Created**: 2025-11-16
-**Status**: Draft
+**Status**: In progress — core primitives implemented (Section + Wrapper), docs live at `/docs/theme`.
 **Input**: User description: "design system"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -94,3 +94,14 @@ As a user, I want to switch between light and dark themes, so I can choose the m
 - **SC-004**: All new/modified tokens include documented contrast evidence.
 - **SC-005**: All edge cases (missing/invalid tokens) handled gracefully with visible fallback.
 - **SC-006**: User satisfaction with UI consistency and accessibility scores above 90% in user testing.
+
+## Implementation notes (current)
+
+- The `Wrapper` atom now emits `w-*` utility classes (for example `w-grid`, `w-cols-3`, `w-gap-4`) and relies on a small shim in `src/styles/global.css` to map those utilities to the token scale.
+- The `Section` atom exposes a `variant` prop (replacing older `preset` usage) and is the recommended way to create semantic bands in templates.
+- The docs site (`/docs/theme`) implements a left Table-of-Contents (sidebar) and a right identity card; navigation favors CSS-only patterns (`:target`, checkbox toggles) to minimize JS.
+
+## Current status and next steps
+
+- Many acceptance criteria are implemented; run `scripts/contrast-check.js` to regenerate contrast evidence for the latest tokens.
+- Remaining tasks: scan components for hard-coded literals and add unit/E2E tests; expand the `w-*` shim if new utility names are emitted by `Wrapper`.
