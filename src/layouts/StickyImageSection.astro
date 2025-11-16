@@ -9,7 +9,7 @@ interface Props {
 const { imageUrl, imageAlt } = Astro.props;
 ---
 <Section variant="default" tag="div" classes="relative min-h-screen">
-  <Wrapper cols={2} display="grid" gap="4rem" alignItems="start">
+  <Wrapper cols={2} display="grid" gap="4rem" alignItems="flex-start">
     <div class="sticky top-0 h-screen flex items-center">
       <div class="w-full">
         <img src={imageUrl} alt={imageAlt ?? ""} width={800} height={1000} class="rounded-xl shadow-2xl object-cover w-full h-[80vh]" />
