@@ -214,8 +214,8 @@ src/components/
 │   ├── StaticMap.astro        # Carte statique (image)
 │   ├── Table.astro            # Tableau de données
 │   ├── Text.astro             # Composant texte stylisé
-│   ├── Wrapper.astro          # Primitive de layout (flex/grid)
-│   └── Wrapper2.astro         # (Si Wrapper2 est un utilitaire de layout distinct, il faudrait le renommer ou fusionner avec Wrapper pour clarté.)
+│   └── Wrapper.astro          # Primitive de layout (flex/grid)
+│ 
 ├── molecules/                 # Combinaisons d'atomes, unités fonctionnelles
 │   ├── Animation.astro        # Conteneur pour des animations spécifiques
 │   ├── CardCategory.astro     # Carte pour afficher une catégorie

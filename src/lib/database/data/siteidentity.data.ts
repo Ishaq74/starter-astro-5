@@ -2,8 +2,8 @@ export const siteidentity = [
   {
     id: 1,
     slug: "boox",
-    title: "Comment Cuire au AirFryer",
-    description: "Restauration rapide fait maison!",
+    title: "BooxSite",
+    description: "Création de site web avec Astro CMS BooxSite",
     keywords: "astro, cms, site web, gratuit, performant",
     author: "Auteur de la Publication",
     address: "1 rue de la lune, 74000 Annecy",
@@ -60,8 +60,8 @@ export const siteidentity = [
     navLinks: [
       { name: "Accueil", url: "/", icon: "mdi:home-city" },
       { name: "À propos", url: "/apropos" },
-      { name: "Nos Recettes", url: "/recipes", dropdown: true },
-      { name: "Les AirFryers", url: "/airfryers", dropdown: true },
+      { name: "Docs", url: "/docs", icon: "mdi:book-open-page-variant" },
+      { name: "Thème", url: "/docs/theme", icon: "mdi:palette" },
       { name: "Blog", url: "/blog", dropdown: true },
       { name: "Users", url: "/users", icon: "mdi:account" },
       { name: "Contact", url: "/contact", icon: "mdi:mail" },
