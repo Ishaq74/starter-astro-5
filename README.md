@@ -545,15 +545,8 @@ Suivez les instructions pour configurer votre projet Astro avec Vercel.
 
 ---
 
-## 11. Notes de Maintenance du Dépôt
+## 11. Contribuer au Projet
 
-* Un bundle de sauvegarde du dépôt (capturé avant le nettoyage des branches) a été créé localement à : `C:\Users\Utilisateur\Documents\boox-backup-202511161733.bundle`.
-* Toutes les branches superflues ont été supprimées et le dépôt a été consolidé en une seule branche `main`. Si vous avez besoin des références distantes précédentes, ce bundle contient l'historique complet du dépôt.
-
----
-
-## 12. Contribuer au Projet
-
-Nous vous encourageons à contribuer à l'amélioration continue de ce prototype idéal. Pour soumettre des modifications, des améliorations ou signaler des problèmes, veuillez consulter notre guide de contribution détaillé : [CONTRIBUTING.md](CONTRIBUTING.md).
+Nous vous encourageons à contribuer à l'amélioration continue de ce prototype idéal. Pour soumettre des modifications, des améliorations ou signaler des problèmes.
 
 ---
