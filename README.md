@@ -162,8 +162,8 @@ npm run dev
 ```
 
 2. **Accès au Site & au Design System :**
-    Ouvrez votre navigateur à l'adresse indiquée par le serveur (généralement `http://localhost:3000`).
-    Visitez la page du **Design System** à l'adresse [http://localhost:3000/docs/theme](http://localhost:3000/docs/theme) pour explorer la documentation et la vitrine des composants.
+    Ouvrez votre navigateur à l'adresse indiquée par le serveur (généralement `http://localhost:4321`).
+    Visitez la page du **Design System** à l'adresse [http://localhost:4321/docs/theme](http://localhost:4321/docs/theme) pour explorer la documentation et la vitrine des composants.
 
 ---
 
