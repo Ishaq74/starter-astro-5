@@ -37,6 +37,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@types/node": "^22.10.5",
     "@types/nodemailer": "^7.0.3",
     "@types/pg": "^8.15.6",
     "tsx": "^4.20.6"
